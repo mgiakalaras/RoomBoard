@@ -72,3 +72,49 @@ ports:
 ```
 
 Do not change the container port unless you also change `ASPNETCORE_URLS`.
+
+## Clean first deploy / reset database
+
+RoomBoard stores its SQLite database in the Docker volume:
+
+```text
+roomboard_data
+```
+
+In Portainer/Compose this may appear as:
+
+```text
+roomboard_data
+```
+
+or:
+
+```text
+roomboard_roomboard_data
+```
+
+depending on the stack/project prefix.
+
+For a clean first deploy:
+
+```text
+Stacks -> roomboard -> Remove
+Volumes -> roomboard_data / roomboard_roomboard_data -> Remove
+```
+
+Optional, only if you also want to remove uploaded logos/images:
+
+```text
+Volumes -> roomboard_uploads / roomboard_roomboard_uploads -> Remove
+```
+
+Then deploy the stack again.
+
+From v1.0.1, demo rooms, teachers, class groups and bookings are not seeded in Production unless you explicitly enable:
+
+```yaml
+environment:
+  SEED_DEMO_DATA: "true"
+```
+
+Do not enable this for the real school deployment.

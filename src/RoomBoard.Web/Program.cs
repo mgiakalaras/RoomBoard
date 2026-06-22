@@ -29,7 +29,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RoomBoardDbContext>();
     db.Database.EnsureCreated();
-    RoomBoardDbSeeder.Seed(db);
+
+    var seedDemoData =
+        app.Environment.IsDevelopment() ||
+        builder.Configuration.GetValue<bool>("RoomBoard:SeedDemoData") ||
+        string.Equals(Environment.GetEnvironmentVariable("SEED_DEMO_DATA"), "true", StringComparison.OrdinalIgnoreCase);
+
+    RoomBoardDbSeeder.Seed(db, seedDemoData);
 }
 
 if (!app.Environment.IsDevelopment())

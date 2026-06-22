@@ -68,6 +68,7 @@ public sealed class RoomBoardDbContext : DbContext
         {
             entity.Property(e => e.SubjectOrPurpose).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Notes).HasMaxLength(250);
+            entity.Property(e => e.CancellationReason).HasMaxLength(250);
             entity.HasIndex(e => new { e.Date, e.RoomId });
         });
     }

@@ -21,11 +21,26 @@ public sealed class IndexModel : PageModel
     public IReadOnlyList<LessonPeriod> Periods { get; private set; } = Array.Empty<LessonPeriod>();
     public IReadOnlyList<BookingDetails> Bookings { get; private set; } = Array.Empty<BookingDetails>();
 
+    [TempData]
+    public string? ResultMessage { get; set; }
+
+    [TempData]
+    public bool ResultSuccess { get; set; }
+
     public void OnGet()
     {
         Rooms = _roomBoard.GetRooms();
         Periods = _roomBoard.GetLessonPeriods();
         Bookings = _roomBoard.GetBookingsForDate(Date);
+    }
+
+    public IActionResult OnPostCancel(int bookingId, string? cancellationReason)
+    {
+        var result = _roomBoard.CancelBooking(bookingId, cancellationReason);
+        ResultMessage = result.Message;
+        ResultSuccess = result.Success;
+
+        return RedirectToPage(new { Date = Date.ToString("yyyy-MM-dd") });
     }
 
     public BookingDetails? FindBooking(int roomId, int periodNumber)

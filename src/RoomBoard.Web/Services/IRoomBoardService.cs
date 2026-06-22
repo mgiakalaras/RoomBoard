@@ -22,6 +22,7 @@ public interface IRoomBoardService
     IReadOnlyList<BookingDetails> GetNextPeriodClassMovements(DateOnly date, int periodNumber);
 
     (bool Success, string Message) CreateBooking(CreateBookingInput input);
+    (bool Success, string Message) CancelBooking(int bookingId, string? reason);
 
     (bool Success, string Message) AddRoom(AddRoomInput input);
     (bool Success, string Message) DeactivateRoom(int roomId);

@@ -11,5 +11,8 @@ public sealed class Booking
     public int? ClassGroupId { get; set; }
     public string SubjectOrPurpose { get; set; } = string.Empty;
     public string? Notes { get; set; }
+    public bool IsCancelled { get; set; }
+    public DateTime? CancelledAt { get; set; }
+    public string? CancellationReason { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

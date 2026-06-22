@@ -298,3 +298,16 @@ Health endpoint:
 ```text
 /health
 ```
+
+## v1.0.1 notes
+
+Booking cancellation:
+- Admin timeline bookings can now be cancelled.
+- Cancelled bookings are soft-cancelled, not deleted.
+- Cancelled bookings no longer appear in public/kiosk/weekly views and no longer block the room.
+- Existing SQLite databases are upgraded automatically with cancellation columns.
+
+Production database:
+- Demo rooms, teachers, class groups and bookings are no longer seeded in Production by default.
+- To clean an existing Portainer test deployment, remove the `roomboard_data` / `roomboard_roomboard_data` volume and redeploy.
+- Lesson periods, school settings and kiosk fallback settings are still created so the app can start cleanly.

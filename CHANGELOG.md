@@ -354,3 +354,23 @@
 
 ### Changed
 - HTTPS redirection can now be disabled in Docker using `DISABLE_HTTPS_REDIRECTION=true`.
+
+## v1.0.1 - Booking cancellation and production seed cleanup
+
+### Added
+- Soft cancellation for bookings.
+- Cancel button on the admin timeline.
+- Optional cancellation reason prompt.
+- SQLite auto-upgrade for existing databases:
+  - `IsCancelled`
+  - `CancelledAt`
+  - `CancellationReason`
+
+### Changed
+- Cancelled bookings are hidden from public view, student kiosk, weekly print and room availability.
+- Cancelled bookings no longer participate in room conflict checks.
+- Demo rooms, teachers, class groups and bookings are no longer seeded in Production by default.
+- Demo data can still be enabled explicitly with `SEED_DEMO_DATA=true`.
+
+### Docs
+- Added Portainer volume reset instructions for clean first deploy.

@@ -225,7 +225,7 @@ public sealed class RoomBoardDbService : IRoomBoardService
         var periods = _db.LessonPeriods.AsNoTracking().ToDictionary(p => p.Id);
 
         return _db.Bookings.AsNoTracking()
-            .Where(b => b.Date == date)
+            .Where(b => b.Date == date && !b.IsCancelled)
             .AsEnumerable()
             .Where(b => rooms.ContainsKey(b.RoomId)
                         && teachers.ContainsKey(b.TeacherId)
@@ -276,7 +276,7 @@ public sealed class RoomBoardDbService : IRoomBoardService
 
         var periodById = _db.LessonPeriods.AsNoTracking().ToDictionary(p => p.Id);
         var existingBookings = _db.Bookings.AsNoTracking()
-            .Where(b => b.Date == input.Date && b.RoomId == input.RoomId)
+            .Where(b => b.Date == input.Date && b.RoomId == input.RoomId && !b.IsCancelled)
             .ToList();
 
         var conflictBooking = existingBookings.FirstOrDefault(b =>
@@ -315,6 +315,30 @@ public sealed class RoomBoardDbService : IRoomBoardService
 
         _db.SaveChanges();
         return (true, "Η κράτηση αποθηκεύτηκε.");
+    }
+
+
+    public (bool Success, string Message) CancelBooking(int bookingId, string? reason)
+    {
+        var booking = _db.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking is null)
+        {
+            return (false, "Η κράτηση δεν βρέθηκε.");
+        }
+
+        if (booking.IsCancelled)
+        {
+            return (false, "Η κράτηση είναι ήδη ακυρωμένη.");
+        }
+
+        booking.IsCancelled = true;
+        booking.CancelledAt = DateTime.Now;
+        booking.CancellationReason = string.IsNullOrWhiteSpace(reason)
+            ? "Ακυρώθηκε από τη διαχείριση."
+            : reason.Trim();
+
+        _db.SaveChanges();
+        return (true, "Η κράτηση ακυρώθηκε. Δεν θα εμφανίζεται πλέον στις προβολές και δεν θα δεσμεύει την αίθουσα.");
     }
 
     public (bool Success, string Message) AddRoom(AddRoomInput input)
@@ -605,7 +629,10 @@ public sealed class RoomBoardDbService : IRoomBoardService
                 ? classGroup
                 : null,
             SubjectOrPurpose = booking.SubjectOrPurpose,
-            Notes = booking.Notes
+            Notes = booking.Notes,
+            IsCancelled = booking.IsCancelled,
+            CancelledAt = booking.CancelledAt,
+            CancellationReason = booking.CancellationReason
         };
     }
 

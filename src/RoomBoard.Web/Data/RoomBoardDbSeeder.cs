@@ -5,10 +5,11 @@ namespace RoomBoard.Web.Data;
 
 public static class RoomBoardDbSeeder
 {
-    public static void Seed(RoomBoardDbContext db)
+    public static void Seed(RoomBoardDbContext db, bool seedDemoData = false)
     {
         EnsureSchoolSettingsTable(db);
         EnsureKioskSpotlightSettingsTable(db);
+        EnsureBookingCancellationColumns(db);
 
         if (!db.SchoolSettings.Any())
         {
@@ -39,7 +40,7 @@ public static class RoomBoardDbSeeder
             db.SaveChanges();
         }
 
-        if (!db.Rooms.Any())
+        if (seedDemoData && !db.Rooms.Any())
         {
             db.Rooms.AddRange(
                 new Room { Id = 1, Name = "Αίθουσα Προβολών", Location = "Κεντρικό κτήριο · 1ος όροφος", DisplayOrder = 1, IsActive = true },
@@ -49,7 +50,7 @@ public static class RoomBoardDbSeeder
             );
         }
 
-        if (!db.Teachers.Any())
+        if (seedDemoData && !db.Teachers.Any())
         {
             db.Teachers.AddRange(
                 new Teacher { Id = 1, FullName = "Γιακαλάρας Μάριος", Specialty = "ΠΕ86", IsActive = true },
@@ -59,7 +60,7 @@ public static class RoomBoardDbSeeder
             );
         }
 
-        if (!db.ClassGroups.Any())
+        if (seedDemoData && !db.ClassGroups.Any())
         {
             db.ClassGroups.AddRange(
                 new ClassGroup { Id = 1, Name = "Α1", IsActive = true },
@@ -85,7 +86,7 @@ public static class RoomBoardDbSeeder
 
         db.SaveChanges();
 
-        if (!db.Bookings.Any())
+        if (seedDemoData && !db.Bookings.Any())
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
             db.Bookings.AddRange(
@@ -129,6 +130,51 @@ CREATE TABLE IF NOT EXISTS KioskSpotlightSettings (
     Credit TEXT NULL,
     UpdatedAt TEXT NOT NULL
 );");
+    }
+
+
+    private static void EnsureBookingCancellationColumns(RoomBoardDbContext db)
+    {
+        db.Database.OpenConnection();
+
+        try
+        {
+            if (!ColumnExists(db, "Bookings", "IsCancelled"))
+            {
+                db.Database.ExecuteSqlRaw("ALTER TABLE Bookings ADD COLUMN IsCancelled INTEGER NOT NULL DEFAULT 0;");
+            }
+
+            if (!ColumnExists(db, "Bookings", "CancelledAt"))
+            {
+                db.Database.ExecuteSqlRaw("ALTER TABLE Bookings ADD COLUMN CancelledAt TEXT NULL;");
+            }
+
+            if (!ColumnExists(db, "Bookings", "CancellationReason"))
+            {
+                db.Database.ExecuteSqlRaw("ALTER TABLE Bookings ADD COLUMN CancellationReason TEXT NULL;");
+            }
+        }
+        finally
+        {
+            db.Database.CloseConnection();
+        }
+    }
+
+    private static bool ColumnExists(RoomBoardDbContext db, string tableName, string columnName)
+    {
+        using var command = db.Database.GetDbConnection().CreateCommand();
+        command.CommandText = $"PRAGMA table_info({tableName});";
+
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            if (string.Equals(reader["name"]?.ToString(), columnName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static Booking CreateBooking(DateOnly date, int roomId, int startPeriodId, int endPeriodId, int teacherId, int classGroupId, string subject)

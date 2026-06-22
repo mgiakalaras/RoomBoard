@@ -11,6 +11,9 @@ public sealed class BookingDetails
     public ClassGroup? ClassGroup { get; set; }
     public string SubjectOrPurpose { get; set; } = string.Empty;
     public string? Notes { get; set; }
+    public bool IsCancelled { get; set; }
+    public DateTime? CancelledAt { get; set; }
+    public string? CancellationReason { get; set; }
 
     // Backwards-friendly alias for screens that mostly care about the start period.
     public LessonPeriod Period => StartPeriod;

@@ -5466,3 +5466,33 @@ body.timeline-shell:has(.kiosk-timeline-header) .public-school-identity {
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================================
+   v1.0.1 Booking cancellation controls
+   ========================================================= */
+
+.cancel-booking-form {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cancel-booking-form button {
+    border: 1px solid rgba(255, 115, 95, .35);
+    background: rgba(180, 48, 38, .22);
+    color: #ffd4ce;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: .68rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.cancel-booking-form button:hover {
+    background: rgba(205, 62, 48, .32);
+    color: #fff4ef;
+}
+
+.timeline-booking {
+    min-height: 0;
+}
