@@ -1,0 +1,128 @@
+@page
+@model RoomBoard.Web.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Διαχειριστικό";
+    var periodCount = Math.Max(Model.Periods.Count, 1);
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Διαχειριστικό καθηγητών</p>
+        <h1>Πρόγραμμα κοινόχρηστων αιθουσών</h1>
+        <p class="muted">@Model.Date.ToString("dddd, dd MMMM yyyy")</p>
+    </div>
+
+    <div class="timeline-header-actions">
+        <form method="get" class="date-jump-form">
+            <label>
+                Ημερομηνία
+                <input asp-for="Date" type="date" />
+            </label>
+            <button type="submit">Προβολή</button>
+        </form>
+
+        <a class="primary-button" asp-page="/Admin/Create">+ Νέα κράτηση</a>
+    </div>
+</section>
+
+<section class="timeline-board admin-board" style="--period-count:@periodCount">
+    <div class="timeline-board-title">
+        <div>
+            <h2>Timeline διαχείρισης</h2>
+            <p>Οι κρατήσεις εμφανίζονται ως blocks. Μια τρίωρη κράτηση πιάνει συνεχόμενα 3 κουτάκια.</p>
+        </div>
+        <span class="board-mode-badge admin">Admin view</span>
+    </div>
+
+    <div class="timeline-grid">
+        <div class="timeline-corner">Αίθουσα</div>
+
+        @foreach (var period in Model.Periods)
+        {
+            <div class="timeline-period-head">
+                <strong>@period.Label</strong>
+                <span>@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm")</span>
+            </div>
+        }
+
+        @foreach (var room in Model.Rooms)
+        {
+            var roomBookings = Model.Bookings
+                .Where(b => b.Room.Id == room.Id)
+                .OrderBy(b => b.StartPeriod.Number)
+                .ToList();
+
+            <div class="timeline-room-label">
+                <strong>@room.Name</strong>
+                <span>@room.Location</span>
+            </div>
+
+            <div class="timeline-lane">
+                @foreach (var period in Model.Periods)
+                {
+                    var booking = roomBookings.FirstOrDefault(b => b.CoversPeriodNumber(period.Number));
+                    <span class="lane-slot @(booking is null ? "open" : "taken")"></span>
+                }
+
+                @foreach (var booking in roomBookings)
+                {
+                    var startIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.StartPeriod.Id);
+                    var endIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.EndPeriod.Id);
+                    if (startIndex >= 0 && endIndex >= startIndex)
+                    {
+                        var span = endIndex - startIndex + 1;
+                        <article class="timeline-booking"
+                                 style="--start:@(startIndex + 1); --span:@span">
+                            <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
+                            <span>@booking.Teacher.FullName</span>
+                            <small>@booking.PeriodRangeLabel</small>
+                        </article>
+                    }
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section class="timeline-lower-grid">
+    <article class="timeline-info-panel">
+        <div class="section-title">
+            <h2>Γρήγορες ενέργειες</h2>
+            <span>Διαχείριση</span>
+        </div>
+
+        <div class="quick-action-grid">
+            <a asp-page="/Admin/Create">Νέα κράτηση</a>
+            <a asp-page="/Admin/Rooms">Αίθουσες</a>
+            <a asp-page="/Admin/Teachers">Καθηγητές</a>
+            <a asp-page="/Admin/ClassGroups">Τμήματα</a>
+            <a asp-page="/Admin/Import">Import Excel</a>
+            <a asp-page="/Admin/SchoolSettings">Σχολική μονάδα</a>
+            <a asp-page="/Admin/Periods">Σχολικές ώρες</a>
+            <a asp-page="/Kiosk/Students">Kiosk μαθητών</a>
+            <a asp-page="/Admin/WeeklyPrint">Εβδομαδιαία εκτύπωση</a>
+        </div>
+    </article>
+
+    <article class="timeline-info-panel">
+        <div class="section-title">
+            <h2>Σύνοψη ημέρας</h2>
+            <span>@Model.Date.ToString("dd/MM/yyyy")</span>
+        </div>
+
+        <div class="summary-grid compact-summary">
+            <article>
+                <span>Αίθουσες</span>
+                <strong>@Model.Rooms.Count</strong>
+            </article>
+            <article>
+                <span>Ώρες</span>
+                <strong>@Model.Periods.Count</strong>
+            </article>
+            <article>
+                <span>Κρατήσεις</span>
+                <strong>@Model.Bookings.Count</strong>
+            </article>
+        </div>
+    </article>
+</section>

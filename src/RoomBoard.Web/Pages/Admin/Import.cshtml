@@ -1,0 +1,103 @@
+@page
+@model RoomBoard.Web.Pages.Admin.ImportModel
+@{
+    ViewData["Title"] = "Μαζικό import";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Εισαγωγή δεδομένων</p>
+        <h1>Μαζικό import από Excel</h1>
+        <p class="muted">Εισαγωγή καθηγητών ή αιθουσών από αρχείο .xlsx με έλεγχο διπλοτύπων.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <form method="post" enctype="multipart/form-data" class="management-form import-form timeline-form">
+        <label>
+            Τύπος import
+            <select asp-for="ImportType">
+                <option value="Teachers">Καθηγητές</option>
+                <option value="Rooms">Αίθουσες</option>
+                <option value="ClassGroups">Τμήματα</option>
+            </select>
+        </label>
+
+        <label>
+            Αρχείο Excel (.xlsx)
+            <input asp-for="ExcelFile" type="file" accept=".xlsx" />
+        </label>
+
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <button type="submit" class="primary-button">Import αρχείου</button>
+    </form>
+
+    @if (Model.Result is not null)
+    {
+        <section class="import-summary">
+            <h2>Αποτέλεσμα import</h2>
+
+            <div class="summary-grid">
+                <article>
+                    <span>Γραμμές</span>
+                    <strong>@Model.Result.TotalRows</strong>
+                </article>
+                <article>
+                    <span>Προστέθηκαν</span>
+                    <strong>@Model.Result.AddedRows</strong>
+                </article>
+                <article>
+                    <span>Παραλείφθηκαν</span>
+                    <strong>@Model.Result.SkippedRows</strong>
+                </article>
+                <article>
+                    <span>Σφάλματα</span>
+                    <strong>@Model.Result.FailedRows</strong>
+                </article>
+            </div>
+
+            @if (Model.Result.Messages.Count > 0)
+            {
+                <details class="import-details" open>
+                    <summary>Λεπτομέρειες</summary>
+                    <ul>
+                        @foreach (var message in Model.Result.Messages)
+                        {
+                            <li>@message</li>
+                        }
+                    </ul>
+                </details>
+            }
+        </section>
+    }
+
+    <section class="simple-card import-help">
+        <h2>Στήλες που αναγνωρίζονται</h2>
+
+        <div class="help-columns">
+            <div>
+                <h3>Καθηγητές</h3>
+                <p><strong>Υποχρεωτικό:</strong> FullName ή Ονοματεπώνυμο</p>
+                <p><strong>Προαιρετικό:</strong> Specialty ή Ειδικότητα</p>
+            </div>
+
+            <div>
+                <h3>Αίθουσες</h3>
+                <p><strong>Υποχρεωτικό:</strong> Name ή Αίθουσα</p>
+                <p><strong>Προαιρετικό:</strong> Location ή Τοποθεσία</p>
+            </div>
+
+            <div>
+                <h3>Τμήματα</h3>
+                <p><strong>Υποχρεωτικό:</strong> Name ή Τμήμα</p>
+                <p><strong>Παραδείγματα:</strong> Α1, Α2, Β1, Γ Οικ.-Πληρ.</p>
+            </div>
+        </div>
+    </section>
+</section>

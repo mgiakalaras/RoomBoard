@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#141a20"/>
+<stop offset="1" stop-color="#342819"/>
+</linearGradient>
+<radialGradient id="r" cx=".2" cy=".15" r=".7">
+<stop offset="0" stop-color="#72d1ff" stop-opacity=".35"/>
+<stop offset="1" stop-color="#72d1ff" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1120" height="700" fill="url(#g)"/>
+<rect width="1120" height="700" fill="url(#r)"/>
+
+        <g stroke="rgba(255,190,80,.55)" stroke-width="4" fill="none">
+        <path d="M120 520 L260 420 L410 480 L560 290 L720 350 L890 180"/>
+        <path d="M130 200 H1020"/><path d="M130 300 H1020"/><path d="M130 400 H1020"/>
+        </g>
+        <g fill="rgba(255,244,223,.75)"><circle cx="260" cy="420" r="13"/><circle cx="410" cy="480" r="13"/><circle cx="560" cy="290" r="13"/><circle cx="720" cy="350" r="13"/><circle cx="890" cy="180" r="13"/></g>
+        
+<text x="56" y="640" fill="rgba(255,244,223,.28)" font-family="Segoe UI, Arial" font-size="34" font-weight="700">data needs context</text>
+</svg>

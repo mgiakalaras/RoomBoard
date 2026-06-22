@@ -1,0 +1,76 @@
+@page
+@model RoomBoard.Web.Pages.Admin.RoomsModel
+@{
+    ViewData["Title"] = "Αίθουσες";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Βασικά δεδομένα</p>
+        <h1>Κοινόχρηστες αίθουσες</h1>
+        <p class="muted">Προσθήκη, απενεργοποίηση και επανενεργοποίηση αιθουσών.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <form method="post" class="management-form timeline-form">
+        <div class="form-row">
+            <label>
+                Όνομα αίθουσας
+                <input asp-for="NewRoom.Name" placeholder="π.χ. Αίθουσα Φυσικών Επιστημών" />
+            </label>
+            <label>
+                Τοποθεσία
+                <input asp-for="NewRoom.Location" placeholder="π.χ. Ισόγειο · Δίπλα στο εργαστήριο" />
+            </label>
+        </div>
+        <div asp-validation-summary="All" class="validation-summary"></div>
+        <button type="submit" class="primary-button">+ Προσθήκη αίθουσας</button>
+    </form>
+
+    <div class="split-management-grid">
+        <section>
+            <h2>Ενεργές αίθουσες</h2>
+            <div class="room-list">
+                @foreach (var room in Model.ActiveRooms)
+                {
+                    <article class="simple-card management-card">
+                        <div>
+                            <h2>@room.Name</h2>
+                            <p>@room.Location</p>
+                        </div>
+
+                        <form method="post" asp-page-handler="Deactivate" asp-route-id="@room.Id" class="inline-action-form"
+                              onsubmit="return confirm('Να απενεργοποιηθεί η αίθουσα @room.Name;');">
+                            <button type="submit" class="danger-button">Απενεργοποίηση</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section>
+            <h2>Απενεργοποιημένες αίθουσες</h2>
+            <div class="room-list">
+                @foreach (var room in Model.InactiveRooms)
+                {
+                    <article class="simple-card management-card inactive-card">
+                        <div>
+                            <h2>@room.Name</h2>
+                            <p>@room.Location</p>
+                        </div>
+
+                        <form method="post" asp-page-handler="Reactivate" asp-route-id="@room.Id" class="inline-action-form">
+                            <button type="submit" class="success-button">Επανενεργοποίηση</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
+</section>

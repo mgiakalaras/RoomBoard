@@ -1,0 +1,96 @@
+@page
+@model RoomBoard.Web.Pages.Admin.TeachersModel
+@{
+    ViewData["Title"] = "Καθηγητές";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Βασικά δεδομένα</p>
+        <h1>Καθηγητές / καθηγήτριες</h1>
+        <p class="muted">Προσθήκη, απενεργοποίηση και επανενεργοποίηση καθηγητών.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <form method="post" class="management-form timeline-form">
+        <div class="form-row">
+            <label>
+                Ονοματεπώνυμο
+                <input asp-for="NewTeacher.FullName" placeholder="π.χ. Παπαδόπουλος Γεώργιος" />
+            </label>
+            <label>
+                Ειδικότητα
+                <input asp-for="NewTeacher.Specialty" placeholder="π.χ. ΠΕ86" />
+            </label>
+        </div>
+        <div asp-validation-summary="All" class="validation-summary"></div>
+        <button type="submit" class="primary-button">+ Προσθήκη καθηγητή/τριας</button>
+    </form>
+
+    <div class="split-management-grid">
+        <section>
+            <h2>Ενεργοί καθηγητές</h2>
+            <div class="data-table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ονοματεπώνυμο</th>
+                            <th>Ειδικότητα</th>
+                            <th class="actions-column">Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var teacher in Model.ActiveTeachers)
+                    {
+                        <tr>
+                            <td>@teacher.FullName</td>
+                            <td>@(teacher.Specialty ?? "-")</td>
+                            <td class="actions-column">
+                                <form method="post" asp-page-handler="Deactivate" asp-route-id="@teacher.Id" class="inline-action-form"
+                                      onsubmit="return confirm('Να απενεργοποιηθεί ο/η καθηγητής/τρια @teacher.FullName;');">
+                                    <button type="submit" class="danger-button small">Απενεργοποίηση</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2>Απενεργοποιημένοι καθηγητές</h2>
+            <div class="data-table-wrap inactive-table">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ονοματεπώνυμο</th>
+                            <th>Ειδικότητα</th>
+                            <th class="actions-column">Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var teacher in Model.InactiveTeachers)
+                    {
+                        <tr>
+                            <td>@teacher.FullName</td>
+                            <td>@(teacher.Specialty ?? "-")</td>
+                            <td class="actions-column">
+                                <form method="post" asp-page-handler="Reactivate" asp-route-id="@teacher.Id" class="inline-action-form">
+                                    <button type="submit" class="success-button small">Επανενεργοποίηση</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</section>

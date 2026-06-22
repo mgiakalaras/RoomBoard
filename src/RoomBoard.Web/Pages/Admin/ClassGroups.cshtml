@@ -1,0 +1,89 @@
+@page
+@model RoomBoard.Web.Pages.Admin.ClassGroupsModel
+@{
+    ViewData["Title"] = "Τμήματα";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Βασικά δεδομένα</p>
+        <h1>Τμήματα</h1>
+        <p class="muted">Προσθήκη, απενεργοποίηση και επανενεργοποίηση τμημάτων που χρησιμοποιούνται στις κρατήσεις.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <form method="post" class="management-form timeline-form">
+        <div class="form-row">
+            <label>
+                Όνομα τμήματος
+                <input asp-for="NewClassGroup.Name" placeholder="π.χ. Α1, Β2, Γ Οικ.-Πληρ." />
+            </label>
+        </div>
+
+        <div asp-validation-summary="All" class="validation-summary"></div>
+        <button type="submit" class="primary-button">+ Προσθήκη τμήματος</button>
+    </form>
+
+    <div class="split-management-grid">
+        <section>
+            <h2>Ενεργά τμήματα</h2>
+            <div class="data-table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Τμήμα</th>
+                            <th class="actions-column">Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var classGroup in Model.ActiveClassGroups)
+                    {
+                        <tr>
+                            <td>@classGroup.Name</td>
+                            <td class="actions-column">
+                                <form method="post" asp-page-handler="Deactivate" asp-route-id="@classGroup.Id" class="inline-action-form"
+                                      onsubmit="return confirm('Να απενεργοποιηθεί το τμήμα @classGroup.Name;');">
+                                    <button type="submit" class="danger-button small">Απενεργοποίηση</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2>Απενεργοποιημένα τμήματα</h2>
+            <div class="data-table-wrap inactive-table">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Τμήμα</th>
+                            <th class="actions-column">Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var classGroup in Model.InactiveClassGroups)
+                    {
+                        <tr>
+                            <td>@classGroup.Name</td>
+                            <td class="actions-column">
+                                <form method="post" asp-page-handler="Reactivate" asp-route-id="@classGroup.Id" class="inline-action-form">
+                                    <button type="submit" class="success-button small">Επανενεργοποίηση</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</section>

@@ -1,0 +1,15 @@
+**/.git
+**/.github
+**/.vs
+**/bin
+**/obj
+**/publish
+**/*.user
+**/*.suo
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/App_Data/*.db
+**/App_Data/*.db-shm
+**/App_Data/*.db-wal
+README.local.md

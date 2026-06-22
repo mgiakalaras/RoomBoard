@@ -1,0 +1,32 @@
+# Visual Studio / .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+publish/
+
+# Runtime data
+*.db
+*.db-shm
+*.db-wal
+src/RoomBoard.Web/App_Data/*.db
+src/RoomBoard.Web/App_Data/*.db-shm
+src/RoomBoard.Web/App_Data/*.db-wal
+
+# Uploaded runtime files
+# Keep the folder but do not commit uploaded school logos/spotlight images.
+src/RoomBoard.Web/wwwroot/uploads/*
+!src/RoomBoard.Web/wwwroot/uploads/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Docker local override files
+docker-compose.override.yml
+.env

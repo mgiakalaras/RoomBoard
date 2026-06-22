@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#10151f"/>
+<stop offset="1" stop-color="#302331"/>
+</linearGradient>
+<radialGradient id="r" cx=".2" cy=".15" r=".7">
+<stop offset="0" stop-color="#ffbe50" stop-opacity=".35"/>
+<stop offset="1" stop-color="#ffbe50" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1120" height="700" fill="url(#g)"/>
+<rect width="1120" height="700" fill="url(#r)"/>
+
+        <g stroke="rgba(255,190,80,.55)" stroke-width="7" fill="none" stroke-linecap="round">
+        <path d="M180 180 H420 V320 H650 V210 H930"/>
+        <path d="M250 520 V410 H470"/><path d="M650 320 V520 H900"/>
+        </g>
+        <g fill="rgba(255,244,223,.70)"><circle cx="420" cy="180" r="18"/><circle cx="650" cy="320" r="18"/><circle cx="930" cy="210" r="18"/><circle cx="250" cy="520" r="18"/><circle cx="900" cy="520" r="18"/></g>
+        
+<text x="56" y="640" fill="rgba(255,244,223,.28)" font-family="Segoe UI, Arial" font-size="34" font-weight="700">technology with purpose</text>
+</svg>

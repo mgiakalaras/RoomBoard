@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#211a15"/>
+<stop offset="1" stop-color="#4a3927"/>
+</linearGradient>
+<radialGradient id="r" cx=".2" cy=".15" r=".7">
+<stop offset="0" stop-color="#ffbe50" stop-opacity=".35"/>
+<stop offset="1" stop-color="#ffbe50" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1120" height="700" fill="url(#g)"/>
+<rect width="1120" height="700" fill="url(#r)"/>
+
+        <rect x="225" y="250" width="670" height="285" rx="24" fill="rgba(255,244,223,.18)"/>
+        <path d="M180 255 L560 105 L940 255 Z" fill="rgba(255,190,80,.38)"/>
+        <rect x="330" y="330" width="120" height="205" fill="rgba(0,0,0,.22)"/>
+        <rect x="510" y="330" width="120" height="92" fill="rgba(255,244,223,.22)"/>
+        <rect x="690" y="330" width="120" height="92" fill="rgba(255,244,223,.22)"/>
+        
+<text x="56" y="640" fill="rgba(255,244,223,.28)" font-family="Segoe UI, Arial" font-size="34" font-weight="700">shared spaces</text>
+</svg>

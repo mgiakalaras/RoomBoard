@@ -1,0 +1,43 @@
+@page
+@inject RoomBoard.Web.Services.IRoomBoardService RoomBoardService
+@{
+    ViewData["Title"] = "About";
+    var settings = RoomBoardService.GetSchoolSettings();
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">About</p>
+        <h1>RoomBoard</h1>
+        <p class="muted">Σύστημα προβολής και διαχείρισης κρατήσεων κοινόχρηστων σχολικών αιθουσών.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface about-page">
+    <div class="about-hero-card">
+        @if (!string.IsNullOrWhiteSpace(settings.LogoPath))
+        {
+            <img src="@settings.LogoPath" alt="Λογότυπο σχολικής μονάδας" />
+        }
+        <div>
+            <span>Σχολική μονάδα</span>
+            <h2>@settings.SchoolName</h2>
+            <p>@settings.SchoolType · @settings.SchoolYear</p>
+        </div>
+    </div>
+
+    <div class="about-grid">
+        <article>
+            <h2>Τι κάνει</h2>
+            <p>Το RoomBoard οργανώνει κρατήσεις αιθουσών, εργαστηρίων, βιβλιοθήκης και άλλων κοινόχρηστων χώρων, ώστε καθηγητές και μαθητές να βλέπουν γρήγορα πού πρέπει να πάνε.</p>
+        </article>
+        <article>
+            <h2>Προβολές</h2>
+            <p>Υπάρχει διαχειριστική προβολή για καθηγητές/γραφείο και ξεχωριστό kiosk μαθητών με μόνο την απολύτως απαραίτητη πληροφορία.</p>
+        </article>
+        <article>
+            <h2>Έκδοση</h2>
+            <p>Τρέχουσα γραμμή ανάπτυξης: v0.8.x · School settings, λογότυπο, kiosk μαθητών, εβδομαδιαία εκτύπωση.</p>
+        </article>
+    </div>
+</section>

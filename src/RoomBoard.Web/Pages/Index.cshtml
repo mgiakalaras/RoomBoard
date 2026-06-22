@@ -1,0 +1,190 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Δημόσια προβολή";
+    var periodCount = Math.Max(Model.Periods.Count, 1);
+}
+
+<section class="timeline-header kiosk-timeline-header">
+    <div class="public-school-identity">
+        @if (!string.IsNullOrWhiteSpace(Model.SchoolLogoPath))
+        {
+            <img src="@Model.SchoolLogoPath" alt="Λογότυπο σχολικής μονάδας" />
+        }
+        <p class="eyebrow">@Model.SchoolName</p>
+        <h1>Πρόγραμμα κοινόχρηστων αιθουσών</h1>
+        <p class="muted">@Model.Today.ToString("dddd, dd MMMM yyyy") · @Model.DisplayPeriodText</p>
+    </div>
+
+    <div class="timeline-clock-card analog-clock-card horizontal-clock-card">
+        <div class="analog-clock" aria-label="Αναλογικό ρολόι">
+            <span class="clock-mark mark-12">12</span>
+            <span class="clock-mark mark-3">3</span>
+            <span class="clock-mark mark-6">6</span>
+            <span class="clock-mark mark-9">9</span>
+            <span id="analogHourHand" class="clock-hand hour-hand"></span>
+            <span id="analogMinuteHand" class="clock-hand minute-hand"></span>
+            <span id="analogSecondHand" class="clock-hand second-hand"></span>
+            <span class="clock-center"></span>
+        </div>
+
+        <div class="horizontal-clock-info">
+            <span id="liveClock" class="analog-digital-time">@DateTime.Now.ToString("HH:mm")</span>
+            <strong>@Model.Today.ToString("dddd, dd MMMM yyyy")</strong>
+            <small>Ανανέωση ανά @Model.AutoRefreshSeconds''</small>
+        </div>
+    </div>
+</section>
+
+<section class="timeline-board kiosk-board" style="--period-count:@periodCount">
+    <div class="timeline-board-title">
+        <div>
+            <h2>Χρονογραμμή αιθουσών</h2>
+            <p>Κάθε γραμμή είναι αίθουσα. Εμφανίζονται οι πραγματικές κρατήσεις της σημερινής ημέρας.</p>
+        </div>
+        <span class="board-mode-badge">Public view</span>
+    </div>
+
+    <div class="timeline-grid">
+        <div class="timeline-corner">Αίθουσα</div>
+
+        @foreach (var period in Model.Periods)
+        {
+            <div class="timeline-period-head">
+                <strong>@period.Label</strong>
+                <span>@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm")</span>
+            </div>
+        }
+
+        @foreach (var status in Model.RoomStatuses)
+        {
+            var bookings = Model.Bookings
+                .Where(b => b.Room.Id == status.Room.Id)
+                .OrderBy(b => b.StartPeriod.Number)
+                .ToList();
+
+            <div class="timeline-room-label">
+                <strong>@status.Room.Name</strong>
+                <span>@status.Room.Location</span>
+            </div>
+
+            <div class="timeline-lane">
+                @foreach (var period in Model.Periods)
+                {
+                    var isBusy = status.BusyPeriodNumbers.Contains(period.Number);
+                    <span class="lane-slot @(isBusy ? "taken" : "open")"></span>
+                }
+
+                @foreach (var booking in bookings)
+                {
+                    var startIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.StartPeriod.Id);
+                    var endIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.EndPeriod.Id);
+                    if (startIndex >= 0 && endIndex >= startIndex)
+                    {
+                        var span = endIndex - startIndex + 1;
+                        <article class="timeline-booking public-booking"
+                                 style="--start:@(startIndex + 1); --span:@span">
+                            <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
+                            <span>@booking.Teacher.FullName</span>
+                            <small>@booking.PeriodRangeLabel</small>
+                        </article>
+                    }
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section class="timeline-lower-grid">
+    <article class="timeline-info-panel">
+        <div class="section-title">
+            <h2>Επόμενη ώρα</h2>
+            <span>@Model.NextPeriodText</span>
+        </div>
+
+        @if (Model.NextPeriodMovements.Count == 0)
+        {
+            <p class="empty-state">@Model.NextMovementsEmptyText</p>
+        }
+        else
+        {
+            <div class="movement-list">
+                @foreach (var booking in Model.NextPeriodMovements)
+                {
+                    <div class="movement-card">
+                        <span>@booking.ClassGroup?.Name</span>
+                        <strong>@booking.Room.Name</strong>
+                        <small>@booking.SubjectOrPurpose · @booking.Teacher.FullName</small>
+                    </div>
+                }
+            </div>
+        }
+    </article>
+
+    <article class="timeline-info-panel">
+        <div class="section-title">
+            <h2>Διαθέσιμες τώρα</h2>
+            <span>@Model.AvailabilityPeriodText</span>
+        </div>
+
+        @if (!Model.IsCurrentTeachingPeriod)
+        {
+            <p class="empty-state">@Model.AvailabilityEmptyText</p>
+        }
+        else
+        {
+            var freeRooms = Model.RoomStatuses.Where(r => !r.IsBusy).ToList();
+
+            if (freeRooms.Count == 0)
+            {
+                <p class="empty-state">@Model.AvailabilityEmptyText</p>
+            }
+            else
+            {
+                <div class="free-room-chips">
+                    @foreach (var status in freeRooms)
+                    {
+                        <span>@status.Room.Name</span>
+                    }
+                </div>
+            }
+        }
+    </article>
+</section>
+
+@section Scripts {
+    <script>
+        const refreshSeconds = @Model.AutoRefreshSeconds;
+        setInterval(() => location.reload(), refreshSeconds * 1000);
+        function updateAnalogClock() {
+            const now = new Date();
+            const clock = document.getElementById('liveClock');
+            if (clock) {
+                clock.textContent = now.toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours() % 12;
+
+            const secondHand = document.getElementById('analogSecondHand');
+            const minuteHand = document.getElementById('analogMinuteHand');
+            const hourHand = document.getElementById('analogHourHand');
+
+            if (secondHand) {
+                secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
+            }
+
+            if (minuteHand) {
+                minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6 + seconds * 0.1}deg)`;
+            }
+
+            if (hourHand) {
+                hourHand.style.transform = `translateX(-50%) rotate(${hours * 30 + minutes * 0.5}deg)`;
+            }
+        }
+
+        setInterval(updateAnalogClock, 1000);
+        updateAnalogClock();
+    </script>
+}

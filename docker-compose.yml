@@ -1,0 +1,21 @@
+services:
+  roomboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: roomboard
+    restart: unless-stopped
+    ports:
+      - "7010:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:8080"
+      DISABLE_HTTPS_REDIRECTION: "true"
+      TZ: "Europe/Athens"
+    volumes:
+      - roomboard_data:/app/App_Data
+      - roomboard_uploads:/app/wwwroot/uploads
+
+volumes:
+  roomboard_data:
+  roomboard_uploads:

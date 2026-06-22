@@ -1,0 +1,170 @@
+@page
+@model RoomBoard.Web.Pages.Admin.CreateModel
+@{
+    ViewData["Title"] = "Νέα κράτηση";
+    var periodCount = Math.Max(Model.Periods.Count, 1);
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Διαχειριστικό καθηγητών</p>
+        <h1>Νέα κράτηση αίθουσας</h1>
+        <p class="muted">Κράτηση για μία ή περισσότερες συνεχόμενες διδακτικές ώρες.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <div class="booking-guard-note">
+        <strong>Δικλείδα ασφαλείας</strong>
+        <span>Δεν επιτρέπεται διπλή κράτηση ίδιας αίθουσας, ίδιας ημερομηνίας και επικαλυπτόμενης διδακτικής ώρας. Ο έλεγχος γίνεται ξανά κατά την αποθήκευση.</span>
+    </div>
+
+    <form method="post" class="booking-form timeline-form">
+        <div class="form-row">
+            <label>
+                Ημερομηνία
+                <input asp-for="Input.Date" type="date" />
+            </label>
+            <label>
+                Αίθουσα
+                <select asp-for="Input.RoomId">
+                    <option value="0">-- Επιλογή --</option>
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <option value="@room.Id">@room.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                Από διδακτική ώρα
+                <select asp-for="Input.StartLessonPeriodId">
+                    <option value="0">-- Επιλογή --</option>
+                    @foreach (var period in Model.Periods)
+                    {
+                        <option value="@period.Id">@period.Label (@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm"))</option>
+                    }
+                </select>
+            </label>
+            <label>
+                Έως διδακτική ώρα
+                <select asp-for="Input.EndLessonPeriodId">
+                    <option value="0">-- Επιλογή --</option>
+                    @foreach (var period in Model.Periods)
+                    {
+                        <option value="@period.Id">@period.Label (@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm"))</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                Καθηγητής/τρια
+                <select asp-for="Input.TeacherId">
+                    <option value="0">-- Επιλογή --</option>
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <option value="@teacher.Id">@teacher.FullName</option>
+                    }
+                </select>
+            </label>
+            <label>
+                Τμήμα
+                <select asp-for="Input.ClassGroupId">
+                    <option value="">-- Χωρίς τμήμα --</option>
+                    @foreach (var classGroup in Model.ClassGroups)
+                    {
+                        <option value="@classGroup.Id">@classGroup.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <label>
+            Μάθημα / χρήση
+            <input asp-for="Input.SubjectOrPurpose" placeholder="π.χ. Ιστορία, Προβολή, Προσομοίωση Πανελλαδικών" />
+        </label>
+
+        <label>
+            Σημειώσεις
+            <textarea asp-for="Input.Notes" rows="3" placeholder="Προαιρετικές σημειώσεις"></textarea>
+        </label>
+
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <button type="submit" class="primary-button">Αποθήκευση κράτησης</button>
+    </form>
+</section>
+
+<section class="booking-preview-surface" style="--period-count:@periodCount">
+    <div class="booking-preview-header">
+        <div>
+            <p class="eyebrow">Προεπισκόπηση</p>
+            <h2>Κρατήσεις ημέρας</h2>
+            <p class="muted">Δείτε τι είναι ήδη κλεισμένο πριν αποθηκεύσετε νέα κράτηση.</p>
+        </div>
+
+        <form method="get" class="preview-date-form">
+            <label>
+                Ημερομηνία προεπισκόπησης
+                <input asp-for="PreviewDate" type="date" />
+            </label>
+            <button type="submit">Προβολή</button>
+        </form>
+    </div>
+
+    <div class="booking-preview-grid">
+        <div class="preview-corner">Αίθουσα</div>
+
+        @foreach (var period in Model.Periods)
+        {
+            <div class="preview-period">
+                <strong>@period.Label</strong>
+                <span>@period.StartTime.ToString("HH:mm")</span>
+            </div>
+        }
+
+        @foreach (var room in Model.Rooms)
+        {
+            var roomBookings = Model.PreviewBookings
+                .Where(b => b.Room.Id == room.Id)
+                .OrderBy(b => b.StartPeriod.Number)
+                .ToList();
+
+            <div class="preview-room">
+                <strong>@room.Name</strong>
+                <span>@room.Location</span>
+            </div>
+
+            <div class="preview-lane">
+                @foreach (var period in Model.Periods)
+                {
+                    var booking = roomBookings.FirstOrDefault(b => b.CoversPeriodNumber(period.Number));
+                    <span class="preview-slot @(booking is null ? "open" : "taken")"></span>
+                }
+
+                @foreach (var booking in roomBookings)
+                {
+                    var startIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.StartPeriod.Id);
+                    var endIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.EndPeriod.Id);
+                    if (startIndex >= 0 && endIndex >= startIndex)
+                    {
+                        var span = endIndex - startIndex + 1;
+                        <article class="preview-booking" style="--start:@(startIndex + 1); --span:@span">
+                            <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
+                            <span>@booking.Teacher.FullName</span>
+                        </article>
+                    }
+                }
+            </div>
+        }
+    </div>
+</section>

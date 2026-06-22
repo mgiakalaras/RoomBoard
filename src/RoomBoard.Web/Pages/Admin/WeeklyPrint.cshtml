@@ -1,0 +1,101 @@
+@page
+@model RoomBoard.Web.Pages.Admin.WeeklyPrintModel
+@{
+    ViewData["Title"] = "Εβδομαδιαία εκτύπωση";
+}
+
+<section class="timeline-header weekly-screen-controls no-print">
+    <div>
+        <p class="eyebrow">Εκτύπωση</p>
+        <h1>Εβδομαδιαίο πρόγραμμα κρατήσεων</h1>
+        <p class="muted">Για ανάρτηση στο γραφείο καθηγητών ή έλεγχο πριν γίνουν νέες κρατήσεις.</p>
+    </div>
+
+    <div class="timeline-header-actions">
+        <form method="get" class="date-jump-form">
+            <label>
+                Εβδομάδα που περιέχει την ημερομηνία
+                <input asp-for="WeekStart" type="date" />
+            </label>
+            <button type="submit">Προβολή</button>
+        </form>
+
+        <button type="button" class="primary-button" onclick="window.print()">Εκτύπωση εβδομάδας</button>
+    </div>
+</section>
+
+<section class="weekly-print-sheet">
+    <header class="weekly-print-header">
+        <div>
+            <p>RoomBoard</p>
+            <h1>Εβδομαδιαίο πρόγραμμα κρατήσεων αιθουσών</h1>
+            <span>@Model.WeekRangeText</span>
+        </div>
+        <div class="weekly-print-meta">
+            <strong>Εκτύπωση</strong>
+            <span>@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+        </div>
+    </header>
+
+    <table class="weekly-schedule-table">
+        <thead>
+            <tr>
+                <th>Ημέρα</th>
+                <th>Ώρα</th>
+                @foreach (var room in Model.Rooms)
+                {
+                    <th>@room.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var day in Model.WeekDays)
+        {
+            var dayBookings = Model.BookingsByDate.TryGetValue(day, out var bookings)
+                ? bookings
+                : Array.Empty<RoomBoard.Web.Models.BookingDetails>();
+
+            for (var i = 0; i < Model.Periods.Count; i++)
+            {
+                var period = Model.Periods[i];
+                <tr>
+                    @if (i == 0)
+                    {
+                        <td class="week-day-cell" rowspan="@Model.Periods.Count">
+                            <strong>@day.ToString("dddd")</strong>
+                            <span>@day.ToString("dd/MM/yyyy")</span>
+                        </td>
+                    }
+
+                    <td class="week-period-cell">
+                        <strong>@period.Label</strong>
+                        <span>@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm")</span>
+                    </td>
+
+                    @foreach (var room in Model.Rooms)
+                    {
+                        var booking = dayBookings.FirstOrDefault(b => b.Room.Id == room.Id && b.CoversPeriodNumber(period.Number));
+                        if (booking is null)
+                        {
+                            <td class="week-free-cell">—</td>
+                        }
+                        else
+                        {
+                            <td class="week-booked-cell">
+                                <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
+                                <span>@booking.Teacher.FullName</span>
+                                <small>@booking.PeriodRangeLabel</small>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+
+    <footer class="weekly-print-footer">
+        <span>Οι κενές θέσεις είναι διαθέσιμες για κράτηση.</span>
+        <span>© @DateTime.Now.Year - RoomBoard</span>
+    </footer>
+</section>

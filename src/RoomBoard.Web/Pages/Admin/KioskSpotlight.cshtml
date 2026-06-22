@@ -1,0 +1,93 @@
+@page
+@model RoomBoard.Web.Pages.Admin.KioskSpotlightModel
+@{
+    ViewData["Title"] = "Kiosk spotlight";
+    var imagePath = string.IsNullOrWhiteSpace(Model.CurrentSettings.ImagePath)
+        ? "/img/kiosk/spotlight-cosmos.svg"
+        : Model.CurrentSettings.ImagePath;
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Ρυθμίσεις Kiosk</p>
+        <h1>Visual spotlight μαθητών</h1>
+        <p class="muted">Χειροκίνητο μήνυμα/εικόνα για το kiosk μαθητών, με offline fallback όταν δεν είναι ενεργό.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface kiosk-spotlight-settings-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <div class="kiosk-spotlight-settings-layout">
+        <form method="post" enctype="multipart/form-data" class="management-form timeline-form kiosk-spotlight-form">
+            <label class="toggle-row">
+                <input asp-for="Input.IsManualEnabled" type="checkbox" />
+                <span>
+                    <strong>Ενεργό χειροκίνητο spotlight</strong>
+                    <small>Αν είναι ανενεργό, το kiosk χρησιμοποιεί το offline image-of-the-day fallback.</small>
+                </span>
+            </label>
+
+            <div class="form-row">
+                <label>
+                    Ετικέτα
+                    <input asp-for="Input.Label" placeholder="π.χ. Image of the day, Ανακοίνωση, Γνώριζες ότι;" />
+                </label>
+                <label>
+                    Credit / πηγή
+                    <input asp-for="Input.Credit" placeholder="π.χ. Φωτογραφία: σχολική μονάδα" />
+                </label>
+            </div>
+
+            <label>
+                Τίτλος
+                <input asp-for="Input.Title" placeholder="Σύντομος τίτλος που θα φαίνεται πάνω στην εικόνα" />
+            </label>
+
+            <label>
+                Κείμενο
+                <textarea asp-for="Input.Text" rows="4" placeholder="Σύντομο κείμενο, ιδανικά 1-2 γραμμές."></textarea>
+            </label>
+
+            <label>
+                Εικόνα spotlight
+                <input asp-for="SpotlightImageFile" type="file" accept=".png,.jpg,.jpeg,.webp,.svg" />
+            </label>
+
+            <p class="muted small-note">Υποστηρίζονται PNG, JPG/JPEG, WEBP και SVG έως 4MB. Αν δεν επιλέξετε νέο αρχείο, διατηρείται η υπάρχουσα εικόνα.</p>
+
+            <div asp-validation-summary="All" class="validation-summary"></div>
+
+            <button type="submit" class="primary-button">Αποθήκευση spotlight</button>
+        </form>
+
+        <aside class="kiosk-spotlight-preview">
+            <span class="preview-label">Προεπισκόπηση</span>
+            <div class="student-visual-spotlight preview-spotlight" style="--spotlight-image: url('@imagePath')">
+                <div class="visual-spotlight-shade">
+                    <span>@Model.CurrentSettings.Label</span>
+                    <strong>@Model.CurrentSettings.Title</strong>
+                    <p>@Model.CurrentSettings.Text</p>
+                    <small>@(Model.CurrentSettings.Credit ?? "RoomBoard visual spotlight")</small>
+                </div>
+            </div>
+
+            <div class="spotlight-mode-card">
+                <strong>Τρέχουσα λειτουργία</strong>
+                @if (Model.CurrentSettings.IsManualEnabled)
+                {
+                    <span class="status-pill enabled">Χειροκίνητο περιεχόμενο ενεργό</span>
+                }
+                else
+                {
+                    <span class="status-pill">Offline fallback ενεργό</span>
+                }
+
+                <p>Online feed τύπου Bing image-of-the-day μπορεί να μπει σε επόμενο στάδιο με cache, ώστε να μη μένει ποτέ άδειο το kiosk.</p>
+            </div>
+        </aside>
+    </div>
+</section>

@@ -1,0 +1,82 @@
+@page
+@model RoomBoard.Web.Pages.Admin.SchoolSettingsModel
+@{
+    ViewData["Title"] = "Σχολική μονάδα";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Ρυθμίσεις</p>
+        <h1>Σχολική μονάδα</h1>
+        <p class="muted">Ονομασία σχολείου, σχολικό έτος και λογότυπο για τις προβολές/kiosk.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface school-settings-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <div class="school-settings-layout">
+        <form method="post" enctype="multipart/form-data" class="management-form timeline-form school-settings-form">
+            <div class="form-row">
+                <label>
+                    Όνομα σχολικής μονάδας
+                    <input asp-for="Input.SchoolName" placeholder="π.χ. Πυθαγόρειο ΓΕΛ Σάμου" />
+                </label>
+                <label>
+                    Τύπος σχολείου
+                    <input asp-for="Input.SchoolType" placeholder="π.χ. Γενικό Λύκειο" />
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    Σχολικό έτος
+                    <input asp-for="Input.SchoolYear" placeholder="π.χ. 2025-2026" />
+                </label>
+                <label>
+                    Διεύθυνση
+                    <input asp-for="Input.Address" placeholder="Προαιρετικά" />
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    Τηλέφωνο
+                    <input asp-for="Input.Phone" placeholder="Προαιρετικά" />
+                </label>
+                <label>
+                    Email
+                    <input asp-for="Input.Email" placeholder="Προαιρετικά" />
+                </label>
+            </div>
+
+            <label>
+                Λογότυπο σχολικής μονάδας
+                <input asp-for="LogoFile" type="file" accept=".png,.jpg,.jpeg,.webp" />
+            </label>
+
+            <p class="muted small-note">Υποστηρίζονται PNG, JPG/JPEG και WEBP έως 2MB. Αν δεν επιλέξετε νέο αρχείο, διατηρείται το υπάρχον λογότυπο.</p>
+
+            <div asp-validation-summary="All" class="validation-summary"></div>
+
+            <button type="submit" class="primary-button">Αποθήκευση ρυθμίσεων</button>
+        </form>
+
+        <aside class="school-preview-card">
+            <span class="preview-label">Προεπισκόπηση</span>
+            @if (!string.IsNullOrWhiteSpace(Model.CurrentLogoPath))
+            {
+                <img src="@Model.CurrentLogoPath" alt="Λογότυπο σχολικής μονάδας" class="school-logo-preview" />
+            }
+            else
+            {
+                <div class="school-logo-placeholder">Λογότυπο</div>
+            }
+            <h2>@Model.Input.SchoolName</h2>
+            <p>@Model.Input.SchoolType · @Model.Input.SchoolYear</p>
+        </aside>
+    </div>
+</section>

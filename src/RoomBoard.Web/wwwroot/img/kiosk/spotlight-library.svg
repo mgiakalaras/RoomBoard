@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#1d1816"/>
+<stop offset="1" stop-color="#3a2b20"/>
+</linearGradient>
+<radialGradient id="r" cx=".2" cy=".15" r=".7">
+<stop offset="0" stop-color="#ffbe50" stop-opacity=".35"/>
+<stop offset="1" stop-color="#ffbe50" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1120" height="700" fill="url(#g)"/>
+<rect width="1120" height="700" fill="url(#r)"/>
+
+        <path d="M160 520 Q560 230 960 520" stroke="rgba(255,190,80,.45)" stroke-width="18" fill="none"/>
+        <rect x="220" y="210" width="680" height="320" rx="30" fill="rgba(255,244,223,.16)"/>
+        <path d="M300 300 H820 M300 365 H760 M300 430 H690" stroke="rgba(255,244,223,.34)" stroke-width="10" stroke-linecap="round"/>
+        
+<text x="56" y="640" fill="rgba(255,244,223,.28)" font-family="Segoe UI, Arial" font-size="34" font-weight="700">check the source</text>
+</svg>

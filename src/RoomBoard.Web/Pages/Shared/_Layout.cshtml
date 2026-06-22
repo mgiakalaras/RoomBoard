@@ -1,0 +1,150 @@
+@inject RoomBoard.Web.Services.IRoomBoardService RoomBoardService
+@{
+    var layoutSettings = RoomBoardService.GetSchoolSettings();
+    var layoutPeriods = RoomBoardService.GetLessonPeriods();
+    var now = TimeOnly.FromDateTime(DateTime.Now);
+    var currentPeriod = layoutPeriods.FirstOrDefault(p => now >= p.StartTime && now <= p.EndTime);
+    var firstPeriod = layoutPeriods.FirstOrDefault();
+    var lastPeriod = layoutPeriods.LastOrDefault();
+    var isOutsideTeachingHours = firstPeriod is not null && lastPeriod is not null && (now < firstPeriod.StartTime || now > lastPeriod.EndTime);
+    var railStatusText = currentPeriod is not null
+        ? $"{currentPeriod.Label} ώρα"
+        : isOutsideTeachingHours
+            ? "Εκτός διδακτικού ωραρίου"
+            : "Διάλειμμα / μεταξύ ωρών";
+}
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RoomBoard</title>
+    <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
+</head>
+<body class="timeline-shell">
+    <aside class="time-rail" aria-label="Χρονική μπάρα">
+        <a class="rail-logo" asp-page="/Index" title="RoomBoard">R</a>
+        <div class="rail-clock">
+            <strong id="layoutClock">@DateTime.Now.ToString("HH:mm")</strong>
+            <span>RoomBoard</span>
+        </div>
+
+        <div id="railTeachingStatus" class="rail-teaching-status @(isOutsideTeachingHours ? "outside" : "")">
+            @railStatusText
+        </div>
+
+        <nav class="rail-periods" aria-label="Διδακτικές ώρες">
+            @foreach (var period in layoutPeriods)
+            {
+                var activeClass = currentPeriod?.Id == period.Id ? "active" : "";
+                <span class="@activeClass"
+                      data-period-number="@period.Number"
+                      data-start="@period.StartTime.ToString("HH\\:mm")"
+                      data-end="@period.EndTime.ToString("HH\\:mm")">
+                    @period.Label
+                </span>
+            }
+        </nav>
+    </aside>
+
+    <main class="timeline-page">
+        @RenderBody()
+    </main>
+
+    <aside class="action-drawer" aria-label="Μενού εφαρμογής">
+<nav class="drawer-nav grouped-drawer-nav">
+            <section class="drawer-group">
+                <h3>Προβολές</h3>
+                <a asp-page="/Index">Προβολή καθηγητών</a>
+                <a asp-page="/Kiosk/Students">Kiosk μαθητών</a>
+                <a asp-page="/Admin/WeeklyPrint">Εβδομαδιαία εκτύπωση</a>
+            </section>
+
+            <section class="drawer-group">
+                <h3>Κρατήσεις</h3>
+                <a asp-page="/Admin/Index">Πρόγραμμα</a>
+                <a asp-page="/Admin/Create">Νέα κράτηση</a>
+            </section>
+
+            <section class="drawer-group">
+                <h3>Βασικά δεδομένα</h3>
+                <a asp-page="/Admin/Rooms">Αίθουσες</a>
+                <a asp-page="/Admin/Teachers">Καθηγητές</a>
+                <a asp-page="/Admin/ClassGroups">Τμήματα</a>
+                <a asp-page="/Admin/Import">Import Excel</a>
+            </section>
+
+            <section class="drawer-group">
+                <h3>Ρυθμίσεις</h3>
+                <a asp-page="/Admin/SchoolSettings">Σχολική μονάδα</a>
+                <a asp-page="/Admin/KioskSpotlight">Kiosk spotlight</a>
+                <a asp-page="/Admin/Periods">Σχολικές ώρες</a>
+            </section>
+                    <section class="drawer-group">
+                <h3>Υποστήριξη</h3>
+                <a asp-page="/Help">Βοήθεια</a>
+                <a asp-page="/About">About</a>
+            </section>
+        </nav>
+</aside>
+
+    <script>
+        function minutesFromHHmm(value) {
+            const parts = value.split(':').map(Number);
+            return parts[0] * 60 + parts[1];
+        }
+
+        function updateLayoutClockAndRail() {
+            const now = new Date();
+            const clock = document.getElementById('layoutClock');
+            if (clock) {
+                clock.textContent = now.toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            const periodItems = Array.from(document.querySelectorAll('.rail-periods [data-start][data-end]'));
+            const status = document.getElementById('railTeachingStatus');
+
+            if (periodItems.length === 0 || !status) {
+                return;
+            }
+
+            let activeItem = null;
+            const firstStart = minutesFromHHmm(periodItems[0].dataset.start);
+            const lastEnd = minutesFromHHmm(periodItems[periodItems.length - 1].dataset.end);
+
+            for (const item of periodItems) {
+                item.classList.remove('active');
+                const start = minutesFromHHmm(item.dataset.start);
+                const end = minutesFromHHmm(item.dataset.end);
+
+                if (currentMinutes >= start && currentMinutes <= end) {
+                    activeItem = item;
+                }
+            }
+
+            status.classList.remove('outside', 'break');
+
+            if (activeItem) {
+                activeItem.classList.add('active');
+                status.textContent = activeItem.textContent.trim() + ' ώρα';
+                return;
+            }
+
+            if (currentMinutes < firstStart || currentMinutes > lastEnd) {
+                status.textContent = 'Εκτός διδακτικού ωραρίου';
+                status.classList.add('outside');
+                return;
+            }
+
+            status.textContent = 'Διάλειμμα / μεταξύ ωρών';
+            status.classList.add('break');
+        }
+
+        setInterval(updateLayoutClockAndRail, 1000);
+        updateLayoutClockAndRail();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

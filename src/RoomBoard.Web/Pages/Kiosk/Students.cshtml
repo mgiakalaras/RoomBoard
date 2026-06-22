@@ -1,0 +1,201 @@
+@page
+@model RoomBoard.Web.Pages.Kiosk.StudentsModel
+@{
+    Layout = null;
+    var mainBookings = Model.CurrentPeriod is not null ? Model.CurrentPeriodBookings : Model.NextPeriodBookings;
+}
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kiosk μαθητών - RoomBoard</title>
+    <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
+</head>
+<body class="student-kiosk-body">
+    <main class="student-kiosk">
+        <header class="student-kiosk-header">
+            <div class="student-kiosk-title-block">
+                <div class="student-school-identity">
+                    @if (!string.IsNullOrWhiteSpace(Model.SchoolSettings.LogoPath))
+                    {
+                        <img src="@Model.SchoolSettings.LogoPath" alt="Λογότυπο σχολικής μονάδας" />
+                    }
+                    <p class="student-kiosk-eyebrow">@Model.SchoolSettings.SchoolName</p>
+                </div>
+                <h1>Οδηγός τμημάτων</h1>
+                <p>@Model.StatusText · @Model.MainPeriodLabel</p>
+            </div>
+
+            <div class="student-status-cluster">
+                <div class="student-period-badge">@Model.PeriodBadgeText</div>
+                <div class="student-clock-box student-horizontal-clock">
+                    <div class="analog-clock student-analog-clock" aria-label="Αναλογικό ρολόι">
+                        <span class="clock-mark mark-12">12</span>
+                        <span class="clock-mark mark-3">3</span>
+                        <span class="clock-mark mark-6">6</span>
+                        <span class="clock-mark mark-9">9</span>
+                        <span id="studentAnalogHourHand" class="clock-hand hour-hand"></span>
+                        <span id="studentAnalogMinuteHand" class="clock-hand minute-hand"></span>
+                        <span id="studentAnalogSecondHand" class="clock-hand second-hand"></span>
+                        <span class="clock-center"></span>
+                    </div>
+
+                    <div class="student-clock-info">
+                        <span id="studentClock">@DateTime.Now.ToString("HH:mm")</span>
+                        <small>@Model.Today.ToString("dddd, dd MMMM yyyy")</small>
+                        <em>Ανανέωση ανά @Model.AutoRefreshSeconds''</em>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="student-main-grid carousel-mode @(mainBookings.Count == 0 ? "no-movements" : "")">
+            <div class="student-movements-panel">
+                @if (mainBookings.Count == 0)
+                {
+                    <section class="student-empty-state compact-empty">
+                        <strong>@Model.EmptyStateTitle</strong>
+                        <span>@Model.EmptyStateMessage</span>
+                    </section>
+                }
+                else
+                {
+                    <section class="student-carousel" data-carousel-seconds="@Model.CarouselSeconds">
+                        <div class="student-carousel-topline">
+                            <span>@Model.CarouselModeText</span>
+                            <strong><span id="studentCarouselIndex">1</span> / @mainBookings.Count</strong>
+                        </div>
+
+                        <div class="student-carousel-stage">
+                            @for (var i = 0; i < mainBookings.Count; i++)
+                            {
+                                var booking = mainBookings[i];
+                                <article class="student-carousel-card @(i == 0 ? "active" : "")" data-carousel-card>
+                                    <div class="carousel-class-block">
+                                        <span>Τμήμα</span>
+                                        <strong>@booking.ClassGroup?.Name</strong>
+                                    </div>
+
+                                    <div class="carousel-direction">
+                                        <span>πηγαίνει</span>
+                                    </div>
+
+                                    <div class="carousel-room-block">
+                                        <span>Αίθουσα</span>
+                                        <strong>@booking.Room.Name</strong>
+                                    </div>
+
+                                    <div class="carousel-meta">
+                                        <div>
+                                            <span>Μάθημα / χρήση</span>
+                                            <strong>@booking.SubjectOrPurpose</strong>
+                                        </div>
+                                        <div>
+                                            <span>Καθηγητής/τρια</span>
+                                            <strong>@booking.Teacher.FullName</strong>
+                                        </div>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+
+                        <div class="student-carousel-dots" aria-label="Δείκτης αλλαγών">
+                            @for (var i = 0; i < mainBookings.Count; i++)
+                            {
+                                <span class="@(i == 0 ? "active" : "")" data-carousel-dot></span>
+                            }
+                        </div>
+                    </section>
+                }
+            </div>
+            <aside class="student-visual-spotlight" style="--spotlight-image: url('@Model.InfoItem.ImagePath')">
+                <div class="visual-spotlight-shade">
+                    <span>@Model.InfoItem.Label</span>
+                    <strong>@Model.InfoItem.Title</strong>
+                    <p>@Model.InfoItem.Text</p>
+                    <small>@Model.InfoItem.Credit</small>
+                </div>
+            </aside>
+        </section>
+
+
+
+        <footer class="student-kiosk-footer">
+            <span>Η οθόνη εμφανίζει μόνο τις μετακινήσεις τμημάτων σε ειδικές/κοινόχρηστες αίθουσες.</span>
+            <span>Ανανέωση ανά @Model.AutoRefreshSeconds''</span>
+        </footer>
+    </main>
+
+    <script>
+        const refreshSeconds = @Model.AutoRefreshSeconds;
+        setInterval(() => location.reload(), refreshSeconds * 1000);
+
+        function updateStudentClock() {
+            const now = new Date();
+
+            const el = document.getElementById('studentClock');
+            if (el) {
+                el.textContent = now.toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours() % 12;
+
+            const secondHand = document.getElementById('studentAnalogSecondHand');
+            const minuteHand = document.getElementById('studentAnalogMinuteHand');
+            const hourHand = document.getElementById('studentAnalogHourHand');
+
+            if (secondHand) {
+                secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
+            }
+
+            if (minuteHand) {
+                minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6 + seconds * 0.1}deg)`;
+            }
+
+            if (hourHand) {
+                hourHand.style.transform = `translateX(-50%) rotate(${hours * 30 + minutes * 0.5}deg)`;
+            }
+        }
+
+        setInterval(updateStudentClock, 1000);
+        updateStudentClock();
+
+        const carouselCards = Array.from(document.querySelectorAll('[data-carousel-card]'));
+        const carouselDots = Array.from(document.querySelectorAll('[data-carousel-dot]'));
+        const carouselIndex = document.getElementById('studentCarouselIndex');
+        const carouselRoot = document.querySelector('[data-carousel-seconds]');
+        const carouselSeconds = carouselRoot ? Number(carouselRoot.dataset.carouselSeconds || '8') : 8;
+        let activeCarouselIndex = 0;
+
+        function showCarouselCard(index) {
+            if (carouselCards.length === 0) {
+                return;
+            }
+
+            activeCarouselIndex = index % carouselCards.length;
+
+            carouselCards.forEach((card, i) => {
+                card.classList.toggle('active', i === activeCarouselIndex);
+            });
+
+            carouselDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === activeCarouselIndex);
+            });
+
+            if (carouselIndex) {
+                carouselIndex.textContent = String(activeCarouselIndex + 1);
+            }
+        }
+
+        if (carouselCards.length > 1) {
+            setInterval(() => {
+                showCarouselCard(activeCarouselIndex + 1);
+            }, carouselSeconds * 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+@page
+@model RoomBoard.Web.Pages.Admin.PeriodsModel
+@{
+    ViewData["Title"] = "Σχολικές ώρες";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Ρυθμίσεις σχολείου</p>
+        <h1>Σχολικές / διδακτικές ώρες</h1>
+        <p class="muted">Προσαρμογή ωραρίου σχολείου, π.χ. 7η ώρα έως 14:00.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert @(Model.ResultSuccess ? "success" : "error")">@Model.ResultMessage</div>
+    }
+
+    <form method="post" asp-page-handler="Save" class="management-form timeline-form">
+        <div class="data-table-wrap">
+            <table class="data-table period-table">
+                <thead>
+                    <tr>
+                        <th>Αριθμός</th>
+                        <th>Έναρξη</th>
+                        <th>Λήξη</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (var i = 0; i < Model.PeriodEdits.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" asp-for="PeriodEdits[i].Id" />
+                            <input asp-for="PeriodEdits[i].Number" type="number" min="1" max="20" />
+                        </td>
+                        <td><input asp-for="PeriodEdits[i].StartTime" type="time" /></td>
+                        <td><input asp-for="PeriodEdits[i].EndTime" type="time" /></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <div asp-validation-summary="All" class="validation-summary"></div>
+        <button type="submit" class="primary-button">Αποθήκευση ωραρίου</button>
+    </form>
+
+    <hr class="soft-separator" />
+
+    <h2>Προσθήκη νέας διδακτικής ώρας</h2>
+    <form method="post" asp-page-handler="Add" class="management-form timeline-form">
+        <div class="form-row three">
+            <label>
+                Αριθμός
+                <input asp-for="NewPeriod.Number" type="number" min="1" max="20" />
+            </label>
+            <label>
+                Έναρξη
+                <input asp-for="NewPeriod.StartTime" type="time" />
+            </label>
+            <label>
+                Λήξη
+                <input asp-for="NewPeriod.EndTime" type="time" />
+            </label>
+        </div>
+        <button type="submit" class="primary-button secondary">+ Προσθήκη ώρας</button>
+    </form>
+</section>
