@@ -7897,3 +7897,195 @@ body.app-layout-shell .drawer-home-return {
 body.kiosk-layout-shell .action-drawer {
     /* kiosk-specific CSS rules remain responsible */
 }
+
+/* =========================================================
+   v1.0.20 Kiosk anti burn-in motion
+   No database changes
+   ========================================================= */
+
+/*
+   Kiosk screens can remain static for many hours.
+   This adds very slow motion:
+   - animated ambient background,
+   - moving glow orbs,
+   - scanline shimmer,
+   - tiny content drift every 3 minutes via JS.
+   Admin pages are not affected.
+*/
+
+.student-kiosk-body {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background-size: 180% 180%;
+    animation: kioskAmbientBackground 240s ease-in-out infinite alternate;
+}
+
+.student-kiosk {
+    --kiosk-drift-x: 0px;
+    --kiosk-drift-y: 0px;
+    position: relative;
+    z-index: 2;
+    transform: translate3d(var(--kiosk-drift-x), var(--kiosk-drift-y), 0);
+    transition: transform 1800ms ease-in-out;
+    will-change: transform;
+}
+
+.kiosk-anti-burn-layer {
+    position: fixed;
+    inset: -8vh -8vw;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.kiosk-anti-burn-layer::before,
+.kiosk-anti-burn-layer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .22;
+    mix-blend-mode: screen;
+}
+
+.kiosk-anti-burn-layer::before {
+    background:
+        radial-gradient(circle at 12% 22%, rgba(255, 190, 80, .22), transparent 24rem),
+        radial-gradient(circle at 82% 74%, rgba(80, 128, 255, .14), transparent 30rem),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .045), transparent 18rem);
+    animation: kioskGlowField 190s linear infinite alternate;
+}
+
+.kiosk-anti-burn-layer::after {
+    background:
+        linear-gradient(115deg, transparent 0%, rgba(255, 236, 201, .045) 42%, transparent 64%);
+    transform: translateX(-40%);
+    animation: kioskLightSweep 145s linear infinite;
+}
+
+.kiosk-anti-burn-orb {
+    position: absolute;
+    width: clamp(180px, 18vw, 360px);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    filter: blur(34px);
+    opacity: .12;
+    background: rgba(255, 190, 80, .65);
+}
+
+.kiosk-anti-burn-orb.orb-one {
+    left: 6%;
+    top: 10%;
+    animation: kioskOrbOne 260s ease-in-out infinite alternate;
+}
+
+.kiosk-anti-burn-orb.orb-two {
+    right: 8%;
+    top: 22%;
+    background: rgba(80, 128, 255, .50);
+    animation: kioskOrbTwo 310s ease-in-out infinite alternate;
+}
+
+.kiosk-anti-burn-orb.orb-three {
+    left: 38%;
+    bottom: 2%;
+    width: clamp(140px, 14vw, 280px);
+    background: rgba(255, 236, 201, .38);
+    animation: kioskOrbThree 235s ease-in-out infinite alternate;
+}
+
+.kiosk-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -18%;
+    height: 18%;
+    background: linear-gradient(to bottom, transparent, rgba(255, 236, 201, .035), transparent);
+    animation: kioskScanline 95s linear infinite;
+    opacity: .55;
+}
+
+@keyframes kioskAmbientBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 80% 40%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes kioskGlowField {
+    0% {
+        transform: translate3d(-1.5vw, -1vh, 0) scale(1);
+    }
+    50% {
+        transform: translate3d(2vw, 1.5vh, 0) scale(1.035);
+    }
+    100% {
+        transform: translate3d(-.5vw, 2vh, 0) scale(.985);
+    }
+}
+
+@keyframes kioskLightSweep {
+    0% {
+        transform: translateX(-55%) rotate(0.001deg);
+    }
+    100% {
+        transform: translateX(55%) rotate(0.001deg);
+    }
+}
+
+@keyframes kioskOrbOne {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        transform: translate3d(18vw, 12vh, 0) scale(1.18);
+    }
+}
+
+@keyframes kioskOrbTwo {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        transform: translate3d(-20vw, 16vh, 0) scale(.90);
+    }
+}
+
+@keyframes kioskOrbThree {
+    0% {
+        transform: translate3d(0, 0, 0) scale(.95);
+    }
+    100% {
+        transform: translate3d(12vw, -14vh, 0) scale(1.12);
+    }
+}
+
+@keyframes kioskScanline {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(140vh);
+    }
+}
+
+/* Respect reduced-motion preferences while keeping static layout usable. */
+@media (prefers-reduced-motion: reduce) {
+    .student-kiosk-body,
+    .kiosk-anti-burn-layer::before,
+    .kiosk-anti-burn-layer::after,
+    .kiosk-anti-burn-orb,
+    .kiosk-scanline {
+        animation: none !important;
+    }
+
+    .student-kiosk {
+        transition: none !important;
+        transform: none !important;
+    }
+}

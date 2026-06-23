@@ -602,3 +602,14 @@
 - This patch only changes shared layout/CSS.
 - Kiosk pages are excluded.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.20 - Kiosk anti burn-in motion
+
+### Added
+- Subtle animated ambient background for the student kiosk.
+- Slow moving glow/orb layer.
+- Very small kiosk content drift every 3 minutes.
+
+### Notes
+- This patch only affects the student kiosk page.
+- It does not modify the SQLite schema or existing data.

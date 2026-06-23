@@ -455,3 +455,12 @@ Responsive drawer fix:
 - Keeps the drawer vertical and fixed on the right for supported desktop resolutions.
 - Kiosk pages are excluded.
 - No database or seed changes are included.
+
+## v1.0.20 notes
+
+Kiosk anti burn-in update:
+- Added very slow ambient motion to the student kiosk page.
+- Added subtle moving glow/orb background and scanline shimmer.
+- Added tiny content drift every 3 minutes to reduce static pixel persistence.
+- Admin and print pages are not affected.
+- No database or seed changes are included.

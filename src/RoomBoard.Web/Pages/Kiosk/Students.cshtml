@@ -17,7 +17,14 @@
     <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
 </head>
 <body class="student-kiosk-body">
-    <main class="student-kiosk">
+    <div class="kiosk-anti-burn-layer" aria-hidden="true">
+        <span class="kiosk-anti-burn-orb orb-one"></span>
+        <span class="kiosk-anti-burn-orb orb-two"></span>
+        <span class="kiosk-anti-burn-orb orb-three"></span>
+        <span class="kiosk-scanline"></span>
+    </div>
+
+    <main class="student-kiosk" id="studentKioskRoot">
         <header class="student-kiosk-header">
             <div class="student-kiosk-title-block">
                 <div class="student-school-identity">
@@ -246,6 +253,38 @@
                 showCarouselCard(activeCarouselIndex + 1);
             }, carouselSeconds * 1000);
         }
+
+
+        const antiBurnStorageKey = 'roomboard.student.antiburn.position';
+        const antiBurnPositions = [
+            { x: 0, y: 0 },
+            { x: 4, y: -3 },
+            { x: -4, y: 3 },
+            { x: 5, y: 4 },
+            { x: -5, y: -4 },
+            { x: 2, y: 5 },
+            { x: -2, y: -5 }
+        ];
+
+        function applyAntiBurnDrift() {
+            const root = document.getElementById('studentKioskRoot');
+            if (!root) {
+                return;
+            }
+
+            const stored = Number(localStorage.getItem(antiBurnStorageKey));
+            const nextIndex = Number.isInteger(stored)
+                ? (stored + 1) % antiBurnPositions.length
+                : 1;
+
+            const pos = antiBurnPositions[nextIndex];
+            root.style.setProperty('--kiosk-drift-x', `${pos.x}px`);
+            root.style.setProperty('--kiosk-drift-y', `${pos.y}px`);
+            localStorage.setItem(antiBurnStorageKey, String(nextIndex));
+        }
+
+        applyAntiBurnDrift();
+        setInterval(applyAntiBurnDrift, 180000);
     </script>
 </body>
 </html>
