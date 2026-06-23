@@ -1,0 +1,49 @@
+@page
+@model RoomBoard.Web.Pages.Admin.PrintsModel
+@{
+    ViewData["Title"] = "Εκτυπώσεις";
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Εκτυπώσεις</p>
+        <h1>Εκτυπώσεις προγράμματος</h1>
+        <p class="muted">Επιλέξτε ημερήσια ή εβδομαδιαία εκτύπωση κρατήσεων αιθουσών.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface prints-center-surface">
+    <div class="print-choice-grid">
+        <article class="print-choice-card">
+            <div>
+                <span class="print-choice-label">Ημερήσια</span>
+                <h2>Ημερήσια εκτύπωση</h2>
+                <p>Πρακτική εκτύπωση για τη σημερινή ημέρα ή για συγκεκριμένη ημερομηνία.</p>
+            </div>
+
+            <div class="print-choice-meta">
+                <span>Σήμερα</span>
+                <strong>@Model.TodayBookingCount</strong>
+                <small>κρατήσεις</small>
+            </div>
+
+            <a class="primary-button" asp-page="/Admin/DailyPrint" asp-route-Date="@Model.Today.ToString("yyyy-MM-dd")">Άνοιγμα ημερήσιας</a>
+        </article>
+
+        <article class="print-choice-card">
+            <div>
+                <span class="print-choice-label">Εβδομαδιαία</span>
+                <h2>Εβδομαδιαία εκτύπωση</h2>
+                <p>Συνολική εικόνα εβδομάδας για ανάρτηση ή έλεγχο διαθεσιμότητας.</p>
+            </div>
+
+            <div class="print-choice-meta">
+                <span>Τρέχουσα εβδομάδα</span>
+                <strong>@Model.WeekBookingCount</strong>
+                <small>κρατήσεις</small>
+            </div>
+
+            <a class="primary-button" asp-page="/Admin/WeeklyPrint" asp-route-WeekStart="@Model.WeekStart.ToString("yyyy-MM-dd")">Άνοιγμα εβδομαδιαίας</a>
+        </article>
+    </div>
+</section>

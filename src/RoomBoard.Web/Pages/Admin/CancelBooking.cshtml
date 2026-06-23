@@ -1,0 +1,67 @@
+@page
+@model RoomBoard.Web.Pages.Admin.CancelBookingModel
+@{
+    ViewData["Title"] = "Ακύρωση κράτησης";
+    var returnDate = Model.ReturnDate ?? Model.Booking?.Date ?? DateOnly.FromDateTime(DateTime.Today);
+}
+
+<section class="timeline-header">
+    <div>
+        <p class="eyebrow">Επιβεβαίωση</p>
+        <h1>Ακύρωση κράτησης</h1>
+        <p class="muted">Ελέγξτε προσεκτικά τα στοιχεία πριν προχωρήσετε.</p>
+    </div>
+</section>
+
+<section class="timeline-form-surface cancel-confirm-surface">
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert error">@Model.ErrorMessage</div>
+        <a class="secondary-button" asp-page="/Admin/Index" asp-route-Date="@returnDate.ToString("yyyy-MM-dd")">← Επιστροφή στο πρόγραμμα</a>
+    }
+    else if (Model.Booking is not null)
+    {
+        <article class="cancel-confirm-card">
+            <div class="danger-mark">!</div>
+
+            <div class="cancel-confirm-details">
+                <span>Πρόκειται να ακυρωθεί</span>
+                <h2>@(Model.Booking.ClassGroup?.Name ?? "-") · @Model.Booking.SubjectOrPurpose</h2>
+
+                <dl>
+                    <div>
+                        <dt>Αίθουσα</dt>
+                        <dd>@Model.Booking.Room.Name</dd>
+                    </div>
+                    <div>
+                        <dt>Καθηγητής/τρια</dt>
+                        <dd>@Model.Booking.Teacher.FullName</dd>
+                    </div>
+                    <div>
+                        <dt>Ημερομηνία</dt>
+                        <dd>@Model.Booking.Date.ToString("dd/MM/yyyy")</dd>
+                    </div>
+                    <div>
+                        <dt>Ώρα</dt>
+                        <dd>@Model.Booking.PeriodRangeLabel</dd>
+                    </div>
+                </dl>
+            </div>
+        </article>
+
+        <form method="post" class="management-form timeline-form cancel-confirm-form">
+            <input type="hidden" asp-for="BookingId" />
+            <input type="hidden" asp-for="ReturnDate" />
+
+            <label>
+                Λόγος ακύρωσης προαιρετικά
+                <textarea asp-for="CancellationReason" rows="3" placeholder="π.χ. Το τμήμα δεν θα μετακινηθεί τελικά / αλλαγή καθηγητών / έκτακτη αλλαγή"></textarea>
+            </label>
+
+            <div class="form-actions split-actions">
+                <a class="secondary-button" asp-page="/Admin/Index" asp-route-Date="@returnDate.ToString("yyyy-MM-dd")">Όχι, επιστροφή</a>
+                <button type="submit" class="danger-button">Οριστική ακύρωση</button>
+            </div>
+        </form>
+    }
+</section>

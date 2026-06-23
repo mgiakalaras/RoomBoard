@@ -7,6 +7,9 @@
     var firstPeriod = layoutPeriods.FirstOrDefault();
     var lastPeriod = layoutPeriods.LastOrDefault();
     var isOutsideTeachingHours = firstPeriod is not null && lastPeriod is not null && (now < firstPeriod.StartTime || now > lastPeriod.EndTime);
+    var currentPath = Context.Request.Path.Value ?? "/";
+    var isTeacherHomePage = currentPath == "/" || currentPath.Equals("/Index", StringComparison.OrdinalIgnoreCase);
+
     var railStatusText = currentPeriod is not null
         ? $"{currentPeriod.Label} ώρα"
         : isOutsideTeachingHours
@@ -18,15 +21,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="manifest" href="~/site.webmanifest" />
+    <meta name="theme-color" content="#ffbe50" />
     <title>@ViewData["Title"] - RoomBoard</title>
     <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
 </head>
 <body class="timeline-shell">
     <aside class="time-rail" aria-label="Χρονική μπάρα">
-        <a class="rail-logo" asp-page="/Index" title="RoomBoard">R</a>
+        <a class="rail-logo app-rail-logo" asp-page="/Index" title="Προβολή καθηγητών">
+            <img src="~/img/app/roomboard-app-icon.svg" alt="RoomBoard" />
+        </a>
         <div class="rail-clock">
             <strong id="layoutClock">@DateTime.Now.ToString("HH:mm")</strong>
-            <span>RoomBoard</span>
         </div>
 
         <div id="railTeachingStatus" class="rail-teaching-status @(isOutsideTeachingHours ? "outside" : "")">
@@ -53,11 +60,16 @@
 
     <aside class="action-drawer" aria-label="Μενού εφαρμογής">
 <nav class="drawer-nav grouped-drawer-nav">
+            @if (!isTeacherHomePage)
+            {
+                <a class="drawer-home-return" asp-page="/Index">← Προβολή καθηγητών</a>
+            }
+
             <section class="drawer-group">
                 <h3>Προβολές</h3>
                 <a asp-page="/Index">Προβολή καθηγητών</a>
                 <a asp-page="/Kiosk/Students">Kiosk μαθητών</a>
-                <a asp-page="/Admin/WeeklyPrint">Εβδομαδιαία εκτύπωση</a>
+                <a asp-page="/Admin/Prints">Εκτυπώσεις</a>
             </section>
 
             <section class="drawer-group">

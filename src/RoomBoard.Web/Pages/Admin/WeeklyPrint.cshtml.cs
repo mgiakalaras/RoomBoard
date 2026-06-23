@@ -17,6 +17,7 @@ public sealed class WeeklyPrintModel : PageModel
     [BindProperty(SupportsGet = true)]
     public DateOnly WeekStart { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
+    public SchoolSettings SchoolSettings { get; private set; } = new();
     public IReadOnlyList<DateOnly> WeekDays { get; private set; } = Array.Empty<DateOnly>();
     public IReadOnlyList<Room> Rooms { get; private set; } = Array.Empty<Room>();
     public IReadOnlyList<LessonPeriod> Periods { get; private set; } = Array.Empty<LessonPeriod>();
@@ -34,6 +35,7 @@ public sealed class WeeklyPrintModel : PageModel
             .Select(offset => WeekStart.AddDays(offset))
             .ToList();
 
+        SchoolSettings = _roomBoard.GetSchoolSettings();
         Rooms = _roomBoard.GetRooms();
         Periods = _roomBoard.GetLessonPeriods();
 

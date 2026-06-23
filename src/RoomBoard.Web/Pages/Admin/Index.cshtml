@@ -76,17 +76,27 @@
                     if (startIndex >= 0 && endIndex >= startIndex)
                     {
                         var span = endIndex - startIndex + 1;
-                        <article class="timeline-booking"
-                                 style="--start:@(startIndex + 1); --span:@span">
-                            <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
-                            <span>@booking.Teacher.FullName</span>
-                            <small>@booking.PeriodRangeLabel</small>
-                            <form method="post" asp-page-handler="Cancel" class="cancel-booking-form" onsubmit="return confirmBookingCancellation(this);">
-                                <input type="hidden" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
-                                <input type="hidden" name="bookingId" value="@booking.Id" />
-                                <input type="hidden" name="cancellationReason" value="" />
-                                <button type="submit" title="Ακύρωση κράτησης">Ακύρωση</button>
-                            </form>
+                        var cancelSummary = $"{booking.Room.Name} | {booking.PeriodRangeLabel} | {(booking.ClassGroup?.Name ?? "-")} | {booking.SubjectOrPurpose} | {booking.Teacher.FullName}";
+
+                        <article class="timeline-booking admin-booking-readable"
+                                 style="--start:@(startIndex + 1); --span:@span"
+                                 title="@cancelSummary">
+                            <div class="admin-booking-title">
+                                <strong>@(booking.ClassGroup?.Name ?? "-")</strong>
+                                <span>@booking.SubjectOrPurpose</span>
+                            </div>
+
+                            <div class="admin-booking-meta">
+                                <span>@booking.Teacher.FullName</span>
+                                <small>@booking.PeriodRangeLabel</small>
+                            </div>
+
+                            <a class="cancel-booking-form cancel-icon-link"
+                               asp-page="/Admin/CancelBooking"
+                               asp-route-bookingId="@booking.Id"
+                               asp-route-returnDate="@Model.Date.ToString("yyyy-MM-dd")"
+                               title="Ακύρωση κράτησης"
+                               aria-label="Ακύρωση κράτησης"><span aria-hidden="true"></span></a>
                         </article>
                     }
                 }
@@ -137,3 +147,5 @@
         </div>
     </article>
 </section>
+
+

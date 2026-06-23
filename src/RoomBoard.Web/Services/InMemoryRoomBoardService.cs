@@ -262,6 +262,16 @@ public sealed class InMemoryRoomBoardService : IRoomBoardService
         }).ToList();
     }
 
+
+    public BookingDetails? GetBookingById(int bookingId)
+    {
+        lock (_lock)
+        {
+            var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
+            return booking is null ? null : ToDetails(booking);
+        }
+    }
+
     public IReadOnlyList<BookingDetails> GetBookingsForDate(DateOnly date)
     {
         lock (_lock)

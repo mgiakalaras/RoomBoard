@@ -1,0 +1,10 @@
+{
+  "name": "RoomBoard",
+  "short_name": "RoomBoard",
+  "description": "School room booking and kiosk display system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#15110f",
+  "theme_color": "#ffbe50",
+  "icons": [{"src":"/img/app/roomboard-app-icon.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]
+}

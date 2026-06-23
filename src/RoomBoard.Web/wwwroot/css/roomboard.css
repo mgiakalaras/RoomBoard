@@ -5496,3 +5496,1652 @@ body.timeline-shell:has(.kiosk-timeline-header) .public-school-identity {
 .timeline-booking {
     min-height: 0;
 }
+
+/* =========================================================
+   v1.0.2 Student kiosk dynamic text scale + app icon polish
+   No database changes
+   ========================================================= */
+
+:root {
+    --student-carousel-scale: .88;
+}
+
+.student-display-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+    margin-left: auto;
+    padding: 8px 10px;
+    border-radius: 18px;
+    background: rgba(255, 236, 201, .075);
+    border: 1px solid rgba(255, 210, 140, .16);
+    box-shadow: 0 12px 24px rgba(0,0,0,.14);
+}
+
+.student-display-controls span {
+    color: rgba(255, 244, 223, .70);
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.student-display-controls button {
+    border: 1px solid rgba(255, 190, 80, .28);
+    background: rgba(255, 190, 80, .14);
+    color: #ffdf9d;
+    border-radius: 999px;
+    padding: 6px 9px;
+    min-width: 38px;
+    font-size: .72rem;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.student-display-controls button:hover {
+    background: rgba(255, 190, 80, .24);
+    color: #fff4df;
+}
+
+/* Scale only the movement carousel, not the whole kiosk. */
+.student-carousel-card {
+    gap: calc(clamp(16px, 2vw, 30px) * var(--student-carousel-scale)) !important;
+    padding: calc(clamp(24px, 3.6vw, 58px) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-class-block strong {
+    min-height: calc(clamp(120px, 17vw, 210px) * var(--student-carousel-scale)) !important;
+    font-size: calc(clamp(3.2rem, 7.2vw, 8rem) * var(--student-carousel-scale)) !important;
+    border-radius: calc(34px * var(--student-carousel-scale)) !important;
+}
+
+.carousel-direction {
+    width: calc(clamp(58px, 6vw, 92px) * var(--student-carousel-scale)) !important;
+    height: calc(clamp(58px, 6vw, 92px) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-direction::after {
+    font-size: calc(clamp(2.2rem, 4vw, 4rem) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-room-block strong {
+    font-size: calc(clamp(2.3rem, 4.8vw, 5.6rem) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-meta {
+    gap: calc(18px * var(--student-carousel-scale)) !important;
+    padding-top: calc(clamp(14px, 2vw, 26px) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-meta strong {
+    font-size: calc(clamp(1rem, 1.45vw, 1.55rem) * var(--student-carousel-scale)) !important;
+}
+
+.carousel-class-block span,
+.carousel-room-block span,
+.carousel-meta span,
+.carousel-direction span {
+    font-size: calc(clamp(.68rem, .85vw, .86rem) * max(.86, var(--student-carousel-scale))) !important;
+}
+
+@media (max-height: 820px) and (min-width: 1181px) {
+    .student-display-controls { padding: 6px 8px; gap: 5px; }
+    .student-display-controls span { display: none; }
+    .student-display-controls button { min-width: 34px; padding: 5px 8px; }
+}
+
+@media (max-width: 900px) {
+    .student-display-controls {
+        order: 4;
+        justify-content: center;
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* =========================================================
+   v1.0.3 Rail logo and home return navigation
+   No database changes
+   ========================================================= */
+
+.rail-logo.app-rail-logo {
+    width: 52px !important;
+    height: 52px !important;
+    padding: 0 !important;
+    border-radius: 17px !important;
+    display: grid;
+    place-items: center;
+    background: transparent !important;
+    overflow: hidden;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .26);
+}
+
+.rail-logo.app-rail-logo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.rail-clock {
+    margin-top: 10px;
+}
+
+.rail-clock strong {
+    line-height: 1;
+}
+
+/* RoomBoard text below clock removed in markup; keep spacing compact. */
+.time-rail .rail-clock span {
+    display: none !important;
+}
+
+.drawer-home-return {
+    display: block;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: rgba(255, 190, 80, .18);
+    border: 1px solid rgba(255, 190, 80, .30);
+    color: #ffdf9d !important;
+    font-weight: 950;
+    text-decoration: none;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .16);
+}
+
+.drawer-home-return:hover {
+    background: rgba(255, 190, 80, .28);
+    color: #fff4df !important;
+}
+
+@media (max-height: 820px) and (min-width: 1181px) {
+    .rail-logo.app-rail-logo {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 14px !important;
+    }
+
+    .rail-clock {
+        margin-top: 7px;
+    }
+
+    .drawer-home-return {
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        border-radius: 15px;
+        font-size: .86rem;
+    }
+}
+
+/* =========================================================
+   v1.0.4 Logo concept #3 and safer cancellation readability
+   No database changes
+   ========================================================= */
+
+.rail-logo.app-rail-logo img {
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .34));
+}
+
+.timeline-booking.admin-booking {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px !important;
+    min-height: 58px;
+    overflow: hidden;
+}
+
+.admin-booking-text {
+    min-width: 0;
+    display: grid;
+    gap: 3px;
+    overflow: hidden;
+}
+
+.admin-booking-text strong,
+.timeline-booking.admin-booking > strong {
+    display: block;
+    max-width: 100%;
+    color: #fff4df;
+    font-size: clamp(.74rem, .78vw, .92rem) !important;
+    line-height: 1.08 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.admin-booking-text span,
+.timeline-booking.admin-booking > span {
+    display: block;
+    max-width: 100%;
+    color: rgba(255, 244, 223, .80);
+    font-size: clamp(.66rem, .70vw, .80rem) !important;
+    line-height: 1.08 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-booking-text small,
+.timeline-booking.admin-booking > small {
+    display: block;
+    color: rgba(255, 223, 157, .82);
+    font-size: .64rem !important;
+    line-height: 1 !important;
+}
+
+.timeline-booking.admin-booking .cancel-booking-form {
+    margin-top: 0 !important;
+    align-self: center;
+    justify-self: end;
+}
+
+.timeline-booking.admin-booking .cancel-booking-form button {
+    white-space: nowrap;
+    padding: 6px 9px;
+    font-size: .64rem;
+}
+
+/* For very narrow booking blocks, put cancel under the text so the lesson remains readable. */
+.timeline-booking.admin-booking[style*="--span:1"] {
+    grid-template-columns: 1fr;
+    align-items: start;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .cancel-booking-form {
+    justify-self: start;
+}
+
+/* Stronger tooltip affordance for full booking details. */
+.timeline-booking.admin-booking {
+    cursor: default;
+}
+
+/* =========================================================
+   v1.0.5 Force admin booking readability + padded logo
+   No database changes
+   ========================================================= */
+
+/* Keep the selected #3 logo from being clipped in the narrow rail. */
+.rail-logo.app-rail-logo {
+    padding: 4px !important;
+    box-sizing: border-box;
+    background: rgba(255, 236, 201, .055) !important;
+}
+
+.rail-logo.app-rail-logo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+}
+
+/* Admin timeline rows need enough vertical space for actual Greek text + cancel button. */
+.admin-board .timeline-grid {
+    grid-auto-rows: minmax(74px, auto) !important;
+}
+
+.admin-board .timeline-room-label {
+    min-height: 74px !important;
+}
+
+.admin-board .timeline-lane {
+    min-height: 74px !important;
+}
+
+/* Force booking content to be readable instead of a blue pill with clipped text. */
+.timeline-booking.admin-booking,
+.timeline-booking.admin-booking-readable {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-height: 58px !important;
+    height: auto !important;
+    padding: 8px 9px !important;
+    border-radius: 13px !important;
+    overflow: visible !important;
+    background: #356fc6 !important;
+    z-index: 4;
+}
+
+.admin-booking-text {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 4px !important;
+    overflow: hidden !important;
+}
+
+.admin-booking-mainline {
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.admin-booking-mainline strong {
+    flex: 0 0 auto;
+    color: #fff4df;
+    font-size: .78rem !important;
+    line-height: 1.05 !important;
+    font-weight: 1000;
+    white-space: nowrap !important;
+}
+
+.admin-booking-mainline span {
+    min-width: 0;
+    color: #fff4df;
+    font-size: .76rem !important;
+    line-height: 1.05 !important;
+    font-weight: 900;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-booking-subline {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    overflow: hidden;
+}
+
+.admin-booking-subline span {
+    min-width: 0;
+    color: rgba(255, 244, 223, .86);
+    font-size: .66rem !important;
+    line-height: 1 !important;
+    font-weight: 800;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-booking-subline small {
+    flex: 0 0 auto;
+    color: rgba(255, 223, 157, .88);
+    font-size: .62rem !important;
+    line-height: 1 !important;
+    font-weight: 900;
+    white-space: nowrap !important;
+}
+
+/* Cancel is visible but no longer steals the content area. */
+.timeline-booking.admin-booking .cancel-booking-form,
+.timeline-booking.admin-booking-readable .cancel-booking-form {
+    margin: 0 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    align-self: center !important;
+    justify-self: end !important;
+}
+
+.timeline-booking.admin-booking .cancel-booking-form button,
+.timeline-booking.admin-booking-readable .cancel-booking-form button {
+    padding: 5px 8px !important;
+    font-size: .62rem !important;
+    line-height: 1 !important;
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+}
+
+/* One-period reservations are too narrow; use vertical layout and show class+subject first. */
+.timeline-booking.admin-booking[style*="--span:1"],
+.timeline-booking.admin-booking-readable[style*="--span:1"] {
+    grid-template-columns: 1fr !important;
+    align-items: start !important;
+    gap: 5px !important;
+    padding: 7px !important;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .admin-booking-mainline,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .admin-booking-mainline {
+    display: grid !important;
+    gap: 2px !important;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .admin-booking-mainline strong,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .admin-booking-mainline strong,
+.timeline-booking.admin-booking[style*="--span:1"] .admin-booking-mainline span,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .admin-booking-mainline span {
+    font-size: .64rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .admin-booking-subline,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .admin-booking-subline {
+    display: none !important;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .cancel-booking-form,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .cancel-booking-form {
+    justify-self: start !important;
+}
+
+.timeline-booking.admin-booking[style*="--span:1"] .cancel-booking-form button,
+.timeline-booking.admin-booking-readable[style*="--span:1"] .cancel-booking-form button {
+    font-size: .58rem !important;
+    padding: 4px 7px !important;
+}
+
+/* Dense screens: keep rows readable but not huge. */
+@media (max-height: 820px) and (min-width: 1181px) {
+    .admin-board .timeline-grid {
+        grid-auto-rows: minmax(66px, auto) !important;
+    }
+
+    .admin-board .timeline-room-label,
+    .admin-board .timeline-lane {
+        min-height: 66px !important;
+    }
+
+    .timeline-booking.admin-booking,
+    .timeline-booking.admin-booking-readable {
+        min-height: 52px !important;
+    }
+}
+
+/* =========================================================
+   v1.0.6 Actual admin booking block fix + large RB logo
+   No database changes
+   ========================================================= */
+
+/* Bigger logo inside the left rail; no nested tiny mark. */
+.rail-logo.app-rail-logo {
+    width: 54px !important;
+    height: 54px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+}
+
+.rail-logo.app-rail-logo img {
+    width: 54px !important;
+    height: 54px !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    display: block !important;
+    transform: none !important;
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .34));
+}
+
+/* The real admin blocks are inside .admin-board and may be plain .timeline-booking.
+   Target them directly so the rule cannot miss again. */
+.admin-board .timeline-grid {
+    grid-auto-rows: minmax(86px, auto) !important;
+}
+
+.admin-board .timeline-room-label,
+.admin-board .timeline-lane,
+.admin-board .lane-slot {
+    min-height: 86px !important;
+}
+
+.admin-board .timeline-booking {
+    top: 7px !important;
+    bottom: 7px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+        "title cancel"
+        "meta cancel" !important;
+    align-items: center !important;
+    gap: 4px 8px !important;
+    min-height: 62px !important;
+    height: auto !important;
+    padding: 8px 9px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    background: #356fc6 !important;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, .24) !important;
+    color: #fff4df !important;
+    z-index: 5 !important;
+}
+
+/* Works with the new structured markup. */
+.admin-board .timeline-booking .admin-booking-title {
+    grid-area: title;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    overflow: hidden;
+}
+
+.admin-board .timeline-booking .admin-booking-title strong {
+    flex: 0 0 auto;
+    color: #fff4df !important;
+    font-size: .76rem !important;
+    line-height: 1.05 !important;
+    font-weight: 1000 !important;
+    white-space: nowrap !important;
+}
+
+.admin-board .timeline-booking .admin-booking-title span {
+    min-width: 0;
+    color: #fff4df !important;
+    font-size: .74rem !important;
+    line-height: 1.05 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking .admin-booking-meta {
+    grid-area: meta;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    overflow: hidden;
+}
+
+.admin-board .timeline-booking .admin-booking-meta span {
+    min-width: 0;
+    color: rgba(255, 244, 223, .82) !important;
+    font-size: .65rem !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking .admin-booking-meta small {
+    flex: 0 0 auto;
+    color: rgba(255, 223, 157, .86) !important;
+    font-size: .60rem !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+}
+
+/* Fallback for any old block that still has direct strong/span/small. */
+.admin-board .timeline-booking > strong {
+    grid-area: title;
+    color: #fff4df !important;
+    font-size: .72rem !important;
+    line-height: 1.08 !important;
+    font-weight: 1000 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking > span {
+    grid-area: meta;
+    color: rgba(255, 244, 223, .82) !important;
+    font-size: .63rem !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking > small {
+    display: none !important;
+}
+
+.admin-board .timeline-booking .cancel-booking-form {
+    grid-area: cancel;
+    margin: 0 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    display: flex !important;
+}
+
+.admin-board .timeline-booking .cancel-booking-form button {
+    padding: 5px 8px !important;
+    font-size: .60rem !important;
+    line-height: 1 !important;
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+}
+
+/* One-hour reservations are narrow: use vertical layout so at least class + subject are readable. */
+.admin-board .timeline-booking[style*="--span:1"] {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+        "title"
+        "cancel" !important;
+    align-content: center !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 6px 7px !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title {
+    display: grid !important;
+    gap: 1px !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title strong,
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title span,
+.admin-board .timeline-booking[style*="--span:1"] > strong,
+.admin-board .timeline-booking[style*="--span:1"] > span {
+    font-size: .61rem !important;
+    line-height: 1.05 !important;
+    max-width: 100% !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-meta {
+    display: none !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form {
+    justify-self: start !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button {
+    font-size: .56rem !important;
+    padding: 4px 7px !important;
+}
+
+@media (max-height: 820px) and (min-width: 1181px) {
+    .admin-board .timeline-grid {
+        grid-auto-rows: minmax(78px, auto) !important;
+    }
+
+    .admin-board .timeline-room-label,
+    .admin-board .timeline-lane,
+    .admin-board .lane-slot {
+        min-height: 78px !important;
+    }
+
+    .rail-logo.app-rail-logo,
+    .rail-logo.app-rail-logo img {
+        width: 48px !important;
+        height: 48px !important;
+    }
+}
+
+/* =========================================================
+   v1.0.7 One-period booking layout + reliable cancel confirm
+   No database changes
+   ========================================================= */
+
+/* The exact one-period case needs its own readable card.
+   For one-hour bookings, prioritize class + subject and make cancel a compact corner action. */
+.admin-board .timeline-booking[style*="--span:1"] {
+    grid-template-columns: 1fr auto !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+        "title cancel"
+        "meta meta" !important;
+    align-content: center !important;
+    align-items: center !important;
+    min-height: 58px !important;
+    padding: 7px 8px !important;
+    gap: 3px 5px !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title {
+    grid-area: title !important;
+    display: grid !important;
+    gap: 2px !important;
+    min-width: 0 !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title strong {
+    color: #fff4df !important;
+    font-size: .66rem !important;
+    line-height: 1 !important;
+    font-weight: 1000 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-title span {
+    color: #fff4df !important;
+    font-size: .62rem !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-meta {
+    grid-area: meta !important;
+    display: flex !important;
+    min-width: 0 !important;
+    gap: 5px !important;
+    overflow: hidden !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-meta span {
+    min-width: 0 !important;
+    font-size: .56rem !important;
+    line-height: 1 !important;
+    color: rgba(255, 244, 223, .74) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .admin-booking-meta small {
+    display: none !important;
+}
+
+/* For one-hour cards, the cancel button becomes tiny but still visible. */
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form {
+    grid-area: cancel !important;
+    justify-self: end !important;
+    align-self: start !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button {
+    font-size: 0 !important;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    position: relative !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button::before {
+    content: "×";
+    font-size: 15px !important;
+    line-height: 1 !important;
+    font-weight: 1000 !important;
+    color: #ffd4ce;
+}
+
+/* In case an old direct strong/span/small block remains, make it readable too. */
+.admin-board .timeline-booking[style*="--span:1"] > strong {
+    grid-area: title !important;
+    font-size: .62rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] > span {
+    grid-area: meta !important;
+    font-size: .54rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Slightly calmer two-plus-period button so it does not dominate. */
+.admin-board .timeline-booking:not([style*="--span:1"]) .cancel-booking-form button {
+    opacity: .88;
+}
+
+.admin-board .timeline-booking:not([style*="--span:1"]) .cancel-booking-form button:hover {
+    opacity: 1;
+}
+
+/* =========================================================
+   v1.0.8 Icon-only cancel button
+   No database changes
+   ========================================================= */
+
+/* Use a tiny icon-only cancellation action everywhere in the admin timeline. */
+.admin-board .timeline-booking .cancel-booking-form button,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    font-size: 0 !important;
+    line-height: 1 !important;
+    border: 1px solid rgba(255, 115, 95, .42) !important;
+    background: rgba(180, 48, 38, .24) !important;
+    color: #ffd4ce !important;
+    position: relative !important;
+}
+
+.admin-board .timeline-booking .cancel-booking-form button::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::before {
+    content: "×";
+    font-size: 16px !important;
+    line-height: 1 !important;
+    font-weight: 1000 !important;
+    color: #ffd4ce !important;
+    transform: translateY(-1px);
+}
+
+.admin-board .timeline-booking .cancel-booking-form button:hover,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button:hover {
+    background: rgba(205, 62, 48, .38) !important;
+    border-color: rgba(255, 150, 130, .55) !important;
+    color: #fff4ef !important;
+}
+
+.admin-board .timeline-booking .cancel-booking-form button:hover::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button:hover::before {
+    color: #fff4ef !important;
+}
+
+/* One-period cards can use an even smaller icon. */
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form .cancel-icon-button {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button::before,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form .cancel-icon-button::before {
+    font-size: 15px !important;
+}
+
+/* =========================================================
+   v1.0.9 Server-side cancel confirmation page
+   No database changes
+   ========================================================= */
+
+/* Anchor version of the cancel icon, replacing unreliable JS confirm submit. */
+.admin-board .timeline-booking .cancel-icon-link,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    font-weight: 1000 !important;
+    text-decoration: none !important;
+    border: 1px solid rgba(255, 115, 95, .42) !important;
+    background: rgba(180, 48, 38, .24) !important;
+    color: #ffd4ce !important;
+    align-self: center !important;
+    justify-self: end !important;
+}
+
+.admin-board .timeline-booking .cancel-icon-link:hover,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link:hover {
+    background: rgba(205, 62, 48, .38) !important;
+    border-color: rgba(255, 150, 130, .55) !important;
+    color: #fff4ef !important;
+}
+
+/* Grid position for the anchor in booking cards. */
+.admin-board .timeline-booking .cancel-icon-link {
+    grid-area: cancel;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-icon-link {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    font-size: 15px !important;
+    align-self: start !important;
+}
+
+/* Confirmation page */
+.cancel-confirm-surface {
+    max-width: 900px;
+    margin-inline: auto;
+}
+
+.cancel-confirm-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 18px;
+    padding: clamp(18px, 2vw, 28px);
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 8% 10%, rgba(255, 115, 95, .18), transparent 14rem),
+        rgba(255, 236, 201, .075);
+    border: 1px solid rgba(255, 115, 95, .28);
+    margin-bottom: 20px;
+}
+
+.danger-mark {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: rgba(205, 62, 48, .26);
+    border: 1px solid rgba(255, 115, 95, .42);
+    color: #ffd4ce;
+    font-size: 1.65rem;
+    font-weight: 1000;
+}
+
+.cancel-confirm-details {
+    display: grid;
+    gap: 10px;
+}
+
+.cancel-confirm-details > span {
+    color: #ffb7ad;
+    font-size: .78rem;
+    font-weight: 950;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.cancel-confirm-details h2 {
+    margin: 0;
+    color: #fff4df;
+    font-size: clamp(1.45rem, 2.5vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -.045em;
+}
+
+.cancel-confirm-details dl {
+    margin: 8px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.cancel-confirm-details dl div {
+    padding: 13px;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, .14);
+    border: 1px solid rgba(255, 210, 140, .12);
+}
+
+.cancel-confirm-details dt {
+    color: rgba(255, 223, 157, .72);
+    font-size: .72rem;
+    font-weight: 950;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.cancel-confirm-details dd {
+    margin: 4px 0 0;
+    color: #fff4df;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.cancel-confirm-form {
+    display: grid;
+    gap: 16px;
+}
+
+.split-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.danger-button {
+    border: 1px solid rgba(255, 115, 95, .44);
+    background: rgba(205, 62, 48, .34);
+    color: #fff4ef;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    background: rgba(220, 72, 56, .45);
+}
+
+@media (max-width: 720px) {
+    .cancel-confirm-card {
+        grid-template-columns: 1fr;
+    }
+
+    .cancel-confirm-details dl {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   v1.0.12 Graphic cancel icon
+   No database changes
+   ========================================================= */
+
+/* Replace font-rendered × with a static graphic cross made from two CSS strokes. */
+.admin-board .timeline-booking .cancel-icon-link,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link,
+.admin-board .timeline-booking .cancel-booking-form button,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button {
+    position: relative !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+}
+
+/* Hide any actual character/span text inside the cancel control. */
+.admin-board .timeline-booking .cancel-icon-link > *,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link > *,
+.admin-board .timeline-booking .cancel-booking-form button > *,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button > * {
+    display: none !important;
+}
+
+/* Neutralize older pseudo-content rules that used the character ×. */
+.admin-board .timeline-booking .cancel-booking-form button::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::before {
+    content: "" !important;
+}
+
+/* Draw the X as two fixed strokes. */
+.admin-board .timeline-booking .cancel-icon-link::before,
+.admin-board .timeline-booking .cancel-icon-link::after,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link::before,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link::after,
+.admin-board .timeline-booking .cancel-booking-form button::before,
+.admin-board .timeline-booking .cancel-booking-form button::after,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 10px !important;
+    height: 2px !important;
+    border-radius: 999px !important;
+    background: #ffd4ce !important;
+    transform-origin: center !important;
+    text-indent: 0 !important;
+}
+
+.admin-board .timeline-booking .cancel-icon-link::before,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link::before,
+.admin-board .timeline-booking .cancel-booking-form button::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::before {
+    transform: translate(-50%, -50%) rotate(45deg) !important;
+}
+
+.admin-board .timeline-booking .cancel-icon-link::after,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link::after,
+.admin-board .timeline-booking .cancel-booking-form button::after,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button::after {
+    transform: translate(-50%, -50%) rotate(-45deg) !important;
+}
+
+.admin-board .timeline-booking .cancel-icon-link:hover::before,
+.admin-board .timeline-booking .cancel-icon-link:hover::after,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link:hover::before,
+.admin-board .timeline-booking .cancel-booking-form.cancel-icon-link:hover::after,
+.admin-board .timeline-booking .cancel-booking-form button:hover::before,
+.admin-board .timeline-booking .cancel-booking-form button:hover::after,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button:hover::before,
+.admin-board .timeline-booking .cancel-booking-form .cancel-icon-button:hover::after {
+    background: #fff4ef !important;
+}
+
+/* One-period cards keep the smaller button but the graphic remains centered. */
+.admin-board .timeline-booking[style*="--span:1"] .cancel-icon-link,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form.cancel-icon-link,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form .cancel-icon-button {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+}
+
+.admin-board .timeline-booking[style*="--span:1"] .cancel-icon-link::before,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-icon-link::after,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form.cancel-icon-link::before,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form.cancel-icon-link::after,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button::before,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form button::after,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form .cancel-icon-button::before,
+.admin-board .timeline-booking[style*="--span:1"] .cancel-booking-form .cancel-icon-button::after {
+    width: 9px !important;
+    height: 2px !important;
+}
+
+/* =========================================================
+   v1.0.13 Prints center and daily print
+   No database changes
+   ========================================================= */
+
+.prints-center-surface {
+    max-width: 1100px;
+    margin-inline: auto;
+}
+
+.print-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.print-choice-card {
+    display: grid;
+    gap: 18px;
+    padding: clamp(20px, 2vw, 30px);
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at 15% 12%, rgba(255, 190, 80, .16), transparent 16rem),
+        rgba(255, 236, 201, .075);
+    border: 1px solid rgba(255, 210, 140, .18);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, .18);
+}
+
+.print-choice-label {
+    width: fit-content;
+    display: inline-flex;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(255, 190, 80, .16);
+    border: 1px solid rgba(255, 190, 80, .28);
+    color: #ffdf9d;
+    font-size: .72rem;
+    font-weight: 950;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.print-choice-card h2 {
+    margin: 14px 0 6px;
+    color: #fff4df;
+    font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+    line-height: 1.05;
+    letter-spacing: -.045em;
+}
+
+.print-choice-card p {
+    margin: 0;
+    color: var(--timeline-muted);
+    line-height: 1.45;
+    font-weight: 800;
+}
+
+.print-choice-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 2px 12px;
+    align-items: end;
+    padding: 14px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, .13);
+    border: 1px solid rgba(255, 210, 140, .12);
+}
+
+.print-choice-meta span {
+    color: rgba(255, 223, 157, .75);
+    font-size: .76rem;
+    font-weight: 950;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.print-choice-meta strong {
+    grid-row: 1 / 3;
+    grid-column: 2;
+    color: #fff4df;
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+.print-choice-meta small {
+    color: var(--timeline-muted);
+    font-weight: 850;
+}
+
+.daily-print-sheet .weekly-print-header h1 {
+    font-size: 1.55rem;
+}
+
+.daily-schedule-table .week-period-cell {
+    min-width: 110px;
+}
+
+@media (max-width: 900px) {
+    .print-choice-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    .daily-print-sheet {
+        page-break-inside: avoid;
+    }
+
+    .daily-schedule-table th,
+    .daily-schedule-table td {
+        font-size: 9px;
+    }
+}
+
+/* =========================================================
+   v1.0.14 Print timeline layout with school header/footer
+   No database changes
+   ========================================================= */
+
+.roomboard-print-sheet {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px;
+    border-radius: 26px;
+    background: #fffaf0;
+    color: #241a12;
+    border: 1px solid rgba(60, 42, 22, .18);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .20);
+}
+
+.roomboard-print-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(60, 42, 22, .18);
+    margin-bottom: 18px;
+}
+
+.print-school-block {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.print-school-block img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid rgba(60, 42, 22, .14);
+    background: #fff;
+    padding: 4px;
+}
+
+.print-school-block p,
+.print-school-block h1,
+.print-school-block span,
+.print-school-block small,
+.print-report-block strong,
+.print-report-block span,
+.print-report-block small {
+    margin: 0;
+}
+
+.print-school-block p {
+    color: #8a6630;
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.print-school-block h1 {
+    color: #241a12;
+    font-size: 1.35rem;
+    line-height: 1.05;
+    margin-top: 3px;
+}
+
+.print-school-block span {
+    display: block;
+    color: #6b5130;
+    font-size: .88rem;
+    font-weight: 800;
+    margin-top: 3px;
+}
+
+.print-school-block small {
+    display: block;
+    color: #755b38;
+    font-size: .75rem;
+    margin-top: 5px;
+    line-height: 1.25;
+}
+
+.print-report-block {
+    text-align: right;
+    display: grid;
+    gap: 3px;
+}
+
+.print-report-block strong {
+    color: #241a12;
+    font-size: 1.05rem;
+}
+
+.print-report-block span {
+    color: #8a6630;
+    font-weight: 900;
+}
+
+.print-report-block small {
+    color: #755b38;
+    font-size: .75rem;
+}
+
+.print-timeline-board {
+    margin-top: 12px;
+}
+
+.print-timeline-grid {
+    display: grid;
+    grid-template-columns: minmax(145px, 1.15fr) repeat(var(--period-count), minmax(95px, 1fr));
+    border: 1px solid rgba(60, 42, 22, .24);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.print-timeline-corner,
+.print-period-head {
+    min-height: 48px;
+    padding: 8px;
+    display: grid;
+    align-content: center;
+    background: #2b2119;
+    color: #fff4df;
+    border-right: 1px solid rgba(255, 244, 223, .18);
+    border-bottom: 1px solid rgba(60, 42, 22, .24);
+}
+
+.print-timeline-corner {
+    font-weight: 1000;
+}
+
+.print-period-head {
+    text-align: center;
+}
+
+.print-period-head strong {
+    font-size: .78rem;
+    line-height: 1;
+}
+
+.print-period-head span {
+    color: #ffdf9d;
+    font-size: .62rem;
+    font-weight: 800;
+    margin-top: 3px;
+}
+
+.print-room-label {
+    min-height: 62px;
+    padding: 8px;
+    display: grid;
+    align-content: center;
+    gap: 3px;
+    background: #f4ead7;
+    border-right: 1px solid rgba(60, 42, 22, .20);
+    border-bottom: 1px solid rgba(60, 42, 22, .16);
+}
+
+.print-room-label strong {
+    color: #241a12;
+    font-size: .78rem;
+    line-height: 1.1;
+}
+
+.print-room-label span {
+    color: #8a6630;
+    font-size: .62rem;
+    font-weight: 800;
+}
+
+.print-timeline-lane {
+    grid-column: span var(--period-count);
+    position: relative;
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: repeat(var(--period-count), minmax(95px, 1fr));
+    border-bottom: 1px solid rgba(60, 42, 22, .16);
+    background: #fffdf8;
+}
+
+.print-lane-slot {
+    border-right: 1px solid rgba(60, 42, 22, .12);
+    min-height: 62px;
+}
+
+.print-lane-slot.taken {
+    background: rgba(53, 111, 198, .10);
+}
+
+.print-booking-block {
+    position: absolute;
+    top: 7px;
+    bottom: 7px;
+    left: calc((var(--start) - 1) * (100% / var(--period-count)) + 6px);
+    width: calc(var(--span) * (100% / var(--period-count)) - 12px);
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: #356fc6;
+    color: #fff;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(25, 50, 100, .18);
+}
+
+.print-booking-block strong {
+    font-size: .68rem;
+    line-height: 1.08;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.print-booking-block span,
+.print-booking-block small {
+    font-size: .56rem;
+    line-height: 1.05;
+    color: rgba(255, 255, 255, .82);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.print-day-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-top: 20px;
+}
+
+.print-day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin: 16px 0 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #f4ead7;
+    border: 1px solid rgba(60, 42, 22, .14);
+}
+
+.print-day-header h2 {
+    margin: 0;
+    color: #241a12;
+    font-size: 1.05rem;
+}
+
+.print-day-header span {
+    color: #8a6630;
+    font-weight: 900;
+    font-size: .78rem;
+}
+
+.roomboard-print-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 2px solid rgba(60, 42, 22, .16);
+    color: #6b5130;
+    font-size: .78rem;
+    font-weight: 850;
+}
+
+.roomboard-print-footer div {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #241a12;
+    font-weight: 1000;
+}
+
+.roomboard-print-footer img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 9mm;
+    }
+
+    body.timeline-shell {
+        background: #fff !important;
+    }
+
+    .roomboard-print-sheet {
+        max-width: none;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+    }
+
+    .roomboard-print-header {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+
+    .print-school-block img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .print-school-block h1 {
+        font-size: 1.05rem;
+    }
+
+    .print-school-block p,
+    .print-school-block span,
+    .print-school-block small,
+    .print-report-block small {
+        font-size: 8px;
+    }
+
+    .print-report-block strong,
+    .print-report-block span {
+        font-size: 10px;
+    }
+
+    .print-timeline-grid {
+        grid-template-columns: minmax(105px, 1.05fr) repeat(var(--period-count), minmax(72px, 1fr));
+        border-radius: 0;
+    }
+
+    .print-timeline-corner,
+    .print-period-head {
+        min-height: 34px;
+        padding: 4px;
+    }
+
+    .print-room-label,
+    .print-timeline-lane,
+    .print-lane-slot {
+        min-height: 46px;
+    }
+
+    .print-room-label {
+        padding: 4px;
+    }
+
+    .print-room-label strong,
+    .print-period-head strong {
+        font-size: 8px;
+    }
+
+    .print-room-label span,
+    .print-period-head span {
+        font-size: 6.5px;
+    }
+
+    .print-booking-block {
+        top: 4px;
+        bottom: 4px;
+        border-radius: 6px;
+        padding: 3px 4px;
+    }
+
+    .print-booking-block strong {
+        font-size: 7px;
+    }
+
+    .print-booking-block span,
+    .print-booking-block small {
+        font-size: 6px;
+    }
+
+    .print-day-section {
+        margin-top: 10px;
+    }
+
+    .print-day-header {
+        margin: 8px 0 4px;
+        padding: 5px 7px;
+        border-radius: 0;
+    }
+
+    .print-day-header h2 {
+        font-size: 9px;
+    }
+
+    .print-day-header span {
+        font-size: 7px;
+    }
+
+    .roomboard-print-footer {
+        margin-top: 10px;
+        padding-top: 6px;
+        font-size: 7px;
+    }
+
+    .roomboard-print-footer img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .weekly-timeline-print-sheet .print-day-section {
+        page-break-inside: avoid;
+    }
+}

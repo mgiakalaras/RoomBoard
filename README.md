@@ -308,6 +308,114 @@ Booking cancellation:
 - Existing SQLite databases are upgraded automatically with cancellation columns.
 
 Production database:
-- Demo rooms, teachers, class groups and bookings are no longer seeded in Production by default.
-- To clean an existing Portainer test deployment, remove the `roomboard_data` / `roomboard_roomboard_data` volume and redeploy.
-- Lesson periods, school settings and kiosk fallback settings are still created so the app can start cleanly.
+- Demo bookings are no longer seeded in Production by default.
+- To clean an existing Portainer test deployment, remove the `roomboard_data` volume and redeploy.
+
+## v1.0.2 notes
+
+Polishing update:
+- Added browser favicon and web manifest.
+- Added square abstract RoomBoard app icon under `wwwroot/img/app/roomboard-app-icon.svg`.
+- Added dynamic student kiosk display controls:
+  - `A-`
+  - `Reset`
+  - `A+`
+- Kiosk display scale is stored per browser using `localStorage`.
+- No database changes are included in this patch.
+
+## v1.0.3 notes
+
+Polishing update:
+- The left rail now uses the square RoomBoard app logo instead of the letter `R`.
+- Removed the extra `RoomBoard` text under the rail clock.
+- Added a prominent `Προβολή καθηγητών` return link on non-home shared-layout pages.
+- No database or seed changes are included.
+
+## v1.0.4 notes
+
+Polishing update:
+- Replaced the app icon/favicon with selected logo concept #3.
+- Improved admin timeline booking readability.
+- Cancellation confirmation now shows full booking details before cancelling.
+- No database or seed changes are included.
+
+## v1.0.5 notes
+
+Polishing fix:
+- Fixed clipping of the selected logo in the left rail.
+- Increased admin timeline row height slightly.
+- Reworked admin booking blocks so Greek text is readable.
+- One-period bookings use a more compact vertical layout.
+- Cancellation still shows full booking details before final confirmation.
+- No database or seed changes are included.
+
+## v1.0.6 notes
+
+Polishing fix:
+- Fixed the actual admin timeline booking markup so readability styles apply.
+- Added hard CSS fallback targeting `.admin-board .timeline-booking` directly.
+- Replaced the app icon/favicon with a larger RB monogram so it is not tiny/cropped in the left rail.
+- No database or seed changes are included.
+
+## v1.0.7 notes
+
+Polishing fix:
+- One-period admin timeline bookings now use a dedicated compact readable layout.
+- One-period cancel button is reduced to a small corner action.
+- Cancellation confirmation is now attached directly with a submit event listener, not a Razor section.
+- No database or seed changes are included.
+
+## v1.0.8 notes
+
+Polishing update:
+- Admin timeline cancellation action is now an icon-only `×` button.
+- The button still keeps tooltip and accessibility label.
+- Cancellation confirmation with full booking details remains unchanged.
+- No database or seed changes are included.
+
+## v1.0.9 notes
+
+Cancellation flow update:
+- Removed unreliable browser confirm/prompt flow.
+- The cancel icon now opens a dedicated server-side confirmation page.
+- The confirmation page shows full booking details before cancellation.
+- Optional cancellation reason is entered on the confirmation page.
+- No database schema changes are included.
+
+## v1.0.10 notes
+
+Build fix:
+- Fixed `GetBookingById()` in `RoomBoardDbService`.
+- Removed invalid navigation-property `Include(...)` usage from `Booking`.
+- No database or seed changes are included.
+
+## v1.0.11 notes
+
+Build fix:
+- Fixed `GetBookingById()` to call `ToDetails(...)` with the required lookup dictionaries.
+- No database or seed changes are included.
+
+## v1.0.12 notes
+
+Polishing update:
+- The admin timeline cancel icon is now drawn as a CSS graphic instead of using the font-rendered `×` character.
+- This keeps the icon visually centered and stable across browsers/fonts.
+- No database or seed changes are included.
+
+## v1.0.13 notes
+
+Print workflow update:
+- Added `/Admin/Prints` as a central prints page.
+- Added daily print page `/Admin/DailyPrint`.
+- Kept weekly print page `/Admin/WeeklyPrint`.
+- The menu now shows `Εκτυπώσεις` instead of only `Εβδομαδιαία εκτύπωση`.
+- No database or seed changes are included.
+
+## v1.0.14 notes
+
+Print layout update:
+- Daily and weekly print pages now use timeline-style room/period boards similar to the admin schedule.
+- Print headers include school unit details from School Settings.
+- Print footers include the RoomBoard app logo.
+- Weekly print is organized as one timeline board per day.
+- No database or seed changes are included.

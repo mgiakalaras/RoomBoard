@@ -19,6 +19,7 @@ public interface IRoomBoardService
     LessonPeriod? GetCurrentPeriod(DateTime now);
     IReadOnlyList<RoomStatus> GetRoomStatuses(DateOnly date, int periodNumber);
     IReadOnlyList<BookingDetails> GetBookingsForDate(DateOnly date);
+    BookingDetails? GetBookingById(int bookingId);
     IReadOnlyList<BookingDetails> GetNextPeriodClassMovements(DateOnly date, int periodNumber);
 
     (bool Success, string Message) CreateBooking(CreateBookingInput input);

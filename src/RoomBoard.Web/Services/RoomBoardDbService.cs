@@ -217,6 +217,26 @@ public sealed class RoomBoardDbService : IRoomBoardService
         }).ToList();
     }
 
+
+    public BookingDetails? GetBookingById(int bookingId)
+    {
+        var booking = _db.Bookings
+            .AsNoTracking()
+            .FirstOrDefault(b => b.Id == bookingId);
+
+        if (booking is null)
+        {
+            return null;
+        }
+
+        var rooms = _db.Rooms.AsNoTracking().ToDictionary(r => r.Id);
+        var teachers = _db.Teachers.AsNoTracking().ToDictionary(t => t.Id);
+        var classGroups = _db.ClassGroups.AsNoTracking().ToDictionary(c => c.Id);
+        var lessonPeriods = _db.LessonPeriods.AsNoTracking().ToDictionary(p => p.Id);
+
+        return ToDetails(booking, rooms, teachers, classGroups, lessonPeriods);
+    }
+
     public IReadOnlyList<BookingDetails> GetBookingsForDate(DateOnly date)
     {
         var rooms = _db.Rooms.AsNoTracking().ToDictionary(r => r.Id);

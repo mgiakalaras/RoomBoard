@@ -10,6 +10,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="manifest" href="~/site.webmanifest" />
+    <meta name="theme-color" content="#ffbe50" />
     <title>Kiosk μαθητών - RoomBoard</title>
     <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
 </head>
@@ -26,6 +29,14 @@
                 </div>
                 <h1>Οδηγός τμημάτων</h1>
                 <p>@Model.StatusText · @Model.MainPeriodLabel</p>
+            </div>
+
+
+            <div class="student-display-controls" aria-label="Ρυθμίσεις μεγέθους προβολής">
+                <span>Μέγεθος προβολής</span>
+                <button type="button" data-kiosk-scale="down">A-</button>
+                <button type="button" data-kiosk-scale="reset">Reset</button>
+                <button type="button" data-kiosk-scale="up">A+</button>
             </div>
 
             <div class="student-status-cluster">
@@ -130,6 +141,45 @@
 
     <script>
         const refreshSeconds = @Model.AutoRefreshSeconds;
+
+        const kioskScaleStorageKey = 'roomboard.student.carousel.scale';
+        const kioskScaleSteps = [0.72, 0.80, 0.88, 0.96, 1.04, 1.12];
+
+        function getStoredKioskScale() {
+            const stored = Number(localStorage.getItem(kioskScaleStorageKey));
+            return kioskScaleSteps.includes(stored) ? stored : 0.88;
+        }
+
+        function applyKioskScale(scale) {
+            document.documentElement.style.setProperty('--student-carousel-scale', String(scale));
+            localStorage.setItem(kioskScaleStorageKey, String(scale));
+        }
+
+        function changeKioskScale(direction) {
+            const current = getStoredKioskScale();
+            let index = kioskScaleSteps.indexOf(current);
+
+            if (direction === 'reset') {
+                applyKioskScale(0.88);
+                return;
+            }
+
+            if (direction === 'down') {
+                index = Math.max(0, index - 1);
+            }
+
+            if (direction === 'up') {
+                index = Math.min(kioskScaleSteps.length - 1, index + 1);
+            }
+
+            applyKioskScale(kioskScaleSteps[index]);
+        }
+
+        applyKioskScale(getStoredKioskScale());
+
+        document.querySelectorAll('[data-kiosk-scale]').forEach((button) => {
+            button.addEventListener('click', () => changeKioskScale(button.dataset.kioskScale));
+        });
         setInterval(() => location.reload(), refreshSeconds * 1000);
 
         function updateStudentClock() {

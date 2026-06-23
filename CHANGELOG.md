@@ -369,8 +369,175 @@
 ### Changed
 - Cancelled bookings are hidden from public view, student kiosk, weekly print and room availability.
 - Cancelled bookings no longer participate in room conflict checks.
-- Demo rooms, teachers, class groups and bookings are no longer seeded in Production by default.
-- Demo data can still be enabled explicitly with `SEED_DEMO_DATA=true`.
+- Demo bookings are no longer seeded in Production by default.
+- Demo bookings can still be enabled explicitly with `SEED_DEMO_BOOKINGS=true`.
 
 ### Docs
 - Added Portainer volume reset instructions for clean first deploy.
+
+## v1.0.2 - UI polishing, favicon and kiosk display controls
+
+### Added
+- Browser favicon.
+- Web manifest.
+- Square abstract RoomBoard app logo SVG.
+- Student kiosk display controls:
+  - A-
+  - Reset
+  - A+
+- Kiosk movement display scale is saved in browser localStorage.
+
+### Changed
+- Student kiosk movement carousel default typography is smaller.
+- Kiosk movement card typography can now be adjusted without touching the database.
+
+### Notes
+- This patch does not modify SQLite schema or existing data.
+
+## v1.0.3 - Rail logo and home return navigation
+
+### Changed
+- Replaced the left rail letter logo with the square RoomBoard app logo.
+- Removed the `RoomBoard` text under the left rail clock.
+- Added a prominent return link to `Προβολή καθηγητών` on non-home shared-layout pages.
+
+### Notes
+- This patch only changes UI/static assets.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.4 - Selected logo and safer booking cancellation UI
+
+### Changed
+- Applied selected logo concept #3 to the app icon and browser favicon.
+- Improved readability of booking blocks in the admin timeline.
+- Booking blocks now show class group, subject, teacher and period more clearly.
+- Cancellation confirmation now displays the full booking summary before proceeding.
+
+### Notes
+- This patch only changes UI/static assets.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.5 - Admin booking readability and logo clipping fix
+
+### Fixed
+- Fixed selected app logo being clipped in the narrow left rail.
+- Fixed admin timeline booking text being clipped/unreadable.
+- Improved one-period booking layout.
+
+### Changed
+- Admin timeline rows are slightly taller so real Greek booking text can fit.
+- Booking cancellation still shows full booking summary before cancelling.
+
+### Notes
+- This patch only changes UI/static assets.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.6 - Actual admin booking readability fix
+
+### Fixed
+- Fixed admin timeline readability rules not applying because the real booking blocks were still plain `.timeline-booking`.
+- Added structured booking markup with class group, subject, teacher and period.
+- Added direct `.admin-board .timeline-booking` CSS fallback so the issue cannot recur.
+- Replaced app icon/favicon with a larger RB monogram for better rail display.
+
+### Notes
+- This patch only changes UI/static assets.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.7 - One-period booking layout and reliable cancel confirmation
+
+### Fixed
+- Fixed one-period booking cards being too cramped in the admin timeline.
+- Fixed cancellation confirmation not appearing reliably.
+- Moved cancellation confirmation to a direct page-level submit listener.
+
+### Changed
+- One-period bookings now prioritize class group and subject.
+- One-period cancel action is compact so it does not consume the text area.
+
+### Notes
+- This patch only changes UI/static behavior.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.8 - Icon-only cancel action
+
+### Changed
+- Replaced the text `Ακύρωση` button in admin timeline bookings with a compact `×` icon button.
+- Kept tooltip and aria-label for clarity/accessibility.
+- Full cancellation confirmation remains active.
+
+### Notes
+- This patch only changes UI.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.9 - Server-side cancellation confirmation page
+
+### Added
+- New `/Admin/CancelBooking` confirmation page.
+- Full booking details before final cancellation.
+- Optional cancellation reason on the confirmation page.
+
+### Changed
+- Admin timeline cancel action now opens the confirmation page instead of relying on browser JavaScript confirm.
+- Cancel icon remains compact.
+
+### Notes
+- This patch changes UI/service methods only.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.10 - Build fix for server-side cancellation page
+
+### Fixed
+- Fixed compile error in `RoomBoardDbService.GetBookingById()`.
+- `Booking` does not have navigation properties such as `Room`; the method now loads the booking by ID and uses the existing `ToDetails(...)` mapping.
+
+### Notes
+- This patch only fixes build/runtime code.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.11 - Build fix for ToDetails lookup arguments
+
+### Fixed
+- Fixed compile error CS7036 in `RoomBoardDbService.GetBookingById()`.
+- `ToDetails(...)` now receives the required rooms, teachers, class groups and lesson periods dictionaries.
+
+### Notes
+- This patch only fixes build code.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.12 - Graphic cancel icon
+
+### Changed
+- Replaced the font-rendered `×` cancel icon with a static CSS-drawn cross.
+- The cancel icon is now visually centered and stable in small booking cards.
+
+### Notes
+- This patch only changes UI.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.13 - Prints center and daily print
+
+### Added
+- New `/Admin/Prints` page as a central print menu.
+- New `/Admin/DailyPrint` page for daily room-booking printouts.
+- Daily print date selector and print button.
+
+### Changed
+- Main menu link changed from `Εβδομαδιαία εκτύπωση` to `Εκτυπώσεις`.
+- Weekly print now links back to the prints center and includes a daily print shortcut.
+
+### Notes
+- This patch only changes UI/pages.
+- It does not modify the SQLite schema or existing data.
+
+## v1.0.14 - Timeline print layout with school header and app footer
+
+### Changed
+- Daily print now uses a timeline board similar to the admin schedule.
+- Weekly print now uses one timeline board per day.
+- Print headers include school unit details from School Settings.
+- Print footers include the RoomBoard application logo.
+
+### Notes
+- This patch only changes print UI/pages.
+- It does not modify the SQLite schema or existing data.
