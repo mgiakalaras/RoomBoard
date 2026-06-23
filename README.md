@@ -446,3 +446,12 @@ Responsive layout correction:
 - Adds resolution-based scaling from 1920x1080 down to 1024x768.
 - Kiosk behavior is not changed.
 - No database or seed changes are included.
+
+## v1.0.19 notes
+
+Responsive drawer fix:
+- Fixes the right drawer breaking on 1440x900 and other scaled desktop layouts.
+- Overrides older max-width rules that pushed the drawer below the page.
+- Keeps the drawer vertical and fixed on the right for supported desktop resolutions.
+- Kiosk pages are excluded.
+- No database or seed changes are included.

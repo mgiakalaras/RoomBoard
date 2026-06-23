@@ -590,3 +590,15 @@
 ### Notes
 - This patch only changes shared layout/CSS.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.19 - Fix right drawer on scaled desktop layouts
+
+### Fixed
+- Fixed right drawer being pushed below the page at 1440x900.
+- Fixed drawer menu becoming a broken multi-column grid inside the narrow right panel.
+- Restored fixed right-side drawer behavior for supported desktop resolutions.
+
+### Notes
+- This patch only changes shared layout/CSS.
+- Kiosk pages are excluded.
+- It does not modify the SQLite schema or existing data.
