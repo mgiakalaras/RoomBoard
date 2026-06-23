@@ -8089,3 +8089,165 @@ body.kiosk-layout-shell .action-drawer {
         transform: none !important;
     }
 }
+
+/* =========================================================
+   v1.0.21 Kiosk RGB glow and spotlight image motion
+   No database changes
+   ========================================================= */
+
+/*
+   Adds tasteful motion to kiosk visuals:
+   - animated RGB glow border around the movement carousel and spotlight image,
+   - subtle Ken-Burns style pan/zoom for the user-selected spotlight image.
+   Admin/print pages are not affected.
+*/
+
+.student-carousel-stage,
+.student-visual-spotlight {
+    position: relative;
+    isolation: isolate;
+}
+
+/* RGB border glow shell */
+.student-carousel-stage::before,
+.student-visual-spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 190, 80, .86),
+        rgba(82, 160, 105, .68),
+        rgba(77, 126, 210, .78),
+        rgba(221, 95, 72, .70),
+        rgba(255, 190, 80, .86)
+    );
+    background-size: 320% 320%;
+    animation: kioskRgbBorderFlow 36s linear infinite;
+    opacity: .38;
+    pointer-events: none;
+    z-index: 5;
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* Outer soft glow, not a loud gamer-rainbow. */
+.student-carousel-stage::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border-radius: 46px;
+    background: radial-gradient(circle at var(--kiosk-glow-x, 20%) var(--kiosk-glow-y, 20%),
+        rgba(255, 190, 80, .18),
+        rgba(77, 126, 210, .12) 34%,
+        transparent 66%);
+    filter: blur(18px);
+    opacity: .55;
+    animation: kioskSoftGlowMove 90s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.student-carousel-card {
+    z-index: 1;
+}
+
+/*
+   Spotlight image:
+   The original background stays as fallback.
+   This ::before layer shows the same user image and moves slowly.
+*/
+.student-visual-spotlight {
+    background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.48)),
+        rgba(24, 19, 16, .38) !important;
+}
+
+.student-visual-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: -7%;
+    background:
+        linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.24)),
+        var(--spotlight-image) center/cover no-repeat;
+    z-index: -1;
+    transform: scale(1.035) translate3d(0, 0, 0);
+    animation: kioskSpotlightKenBurns 120s ease-in-out infinite alternate;
+    will-change: transform, background-position;
+}
+
+.student-visual-spotlight .visual-spotlight-shade {
+    z-index: 2;
+}
+
+@keyframes kioskRgbBorderFlow {
+    0% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: hue-rotate(28deg);
+    }
+    100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+}
+
+@keyframes kioskSoftGlowMove {
+    0% {
+        --kiosk-glow-x: 18%;
+        --kiosk-glow-y: 18%;
+        opacity: .42;
+    }
+    50% {
+        --kiosk-glow-x: 82%;
+        --kiosk-glow-y: 42%;
+        opacity: .58;
+    }
+    100% {
+        --kiosk-glow-x: 48%;
+        --kiosk-glow-y: 86%;
+        opacity: .45;
+    }
+}
+
+@keyframes kioskSpotlightKenBurns {
+    0% {
+        transform: scale(1.035) translate3d(-1.5%, -1.2%, 0);
+        background-position: 48% 50%;
+    }
+    35% {
+        transform: scale(1.055) translate3d(1.2%, -.8%, 0);
+        background-position: 52% 48%;
+    }
+    70% {
+        transform: scale(1.045) translate3d(.7%, 1.3%, 0);
+        background-position: 51% 53%;
+    }
+    100% {
+        transform: scale(1.065) translate3d(-.8%, 1.1%, 0);
+        background-position: 47% 52%;
+    }
+}
+
+/* Slightly stronger glow when there are no movements and the image is the main visual. */
+.student-main-grid.no-movements .student-visual-spotlight::after {
+    opacity: .50;
+}
+
+/* Motion safety. */
+@media (prefers-reduced-motion: reduce) {
+    .student-carousel-stage::before,
+    .student-carousel-stage::after,
+    .student-visual-spotlight::before,
+    .student-visual-spotlight::after {
+        animation: none !important;
+    }
+}

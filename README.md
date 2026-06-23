@@ -464,3 +464,11 @@ Kiosk anti burn-in update:
 - Added tiny content drift every 3 minutes to reduce static pixel persistence.
 - Admin and print pages are not affected.
 - No database or seed changes are included.
+
+## v1.0.21 notes
+
+Kiosk visual motion update:
+- Added subtle animated RGB/glow borders to kiosk visual panels.
+- Added slow Ken-Burns style movement to the user-selected spotlight image.
+- Admin, print and management pages are not affected.
+- No database or seed changes are included.

@@ -613,3 +613,13 @@
 ### Notes
 - This patch only affects the student kiosk page.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.21 - Kiosk RGB glow and spotlight image motion
+
+### Added
+- Animated RGB/glow border for kiosk movement and visual panels.
+- Subtle Ken-Burns style motion for the user-selected spotlight image.
+
+### Notes
+- This patch only changes kiosk CSS.
+- It does not modify the SQLite schema or existing data.
