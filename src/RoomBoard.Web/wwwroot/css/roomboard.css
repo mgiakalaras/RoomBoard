@@ -7369,238 +7369,379 @@ body.timeline-shell:has(.kiosk-timeline-header) .public-school-identity {
 }
 
 /* =========================================================
-   v1.0.17 Normalized non-kiosk layout sizing
+   v1.0.18 Resolution scaling from 1920x1080 down to 1024x768
+   Restores v1.0.16 layout baseline
    No database changes
    ========================================================= */
 
 /*
-   Keep every normal app/admin page on the same visual scale as the main schedule.
-   Kiosk pages are excluded via .kiosk-layout-shell.
+   Baseline is the original/full layout around 1920x1080.
+   We do NOT override the home/right drawer design globally anymore.
+   We only scale the existing layout down with CSS variables.
+   Kiosk display pages keep their own rules and are not targeted here.
 */
-body.normalized-app-shell {
-    --app-left-rail-width: 176px;
-    --app-right-drawer-width: 282px;
-    --app-side-gap: 32px;
-    --app-page-x: clamp(28px, 2.4vw, 42px);
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
+
+body.timeline-shell {
+    --rb-ui-scale: 1;
+    --rb-rail-width: 176px;
+    --rb-drawer-width: 282px;
+    --rb-drawer-inset: 32px;
+    --rb-page-pad-x: 42px;
+    --rb-page-pad-top: 38px;
+    --rb-page-pad-bottom: 60px;
 }
 
-body.normalized-app-shell *,
-body.normalized-app-shell *::before,
-body.normalized-app-shell *::after {
-    box-sizing: border-box;
+/* Apply variables to the original layout slots. */
+body.timeline-shell .time-rail {
+    width: var(--rb-rail-width);
 }
 
-/* Left rail: fixed size and fixed position on all normal pages. */
-body.normalized-app-shell .time-rail {
-    width: var(--app-left-rail-width) !important;
-    padding: 30px 20px !important;
-    overflow-y: auto;
-    overflow-x: hidden;
+body.timeline-shell .timeline-page {
+    margin-left: var(--rb-rail-width);
+    margin-right: calc(var(--rb-drawer-width) + (var(--rb-drawer-inset) * 2));
+    padding: var(--rb-page-pad-top) var(--rb-page-pad-x) var(--rb-page-pad-bottom);
 }
 
-/* Right drawer: stable position/width, internal scrolling instead of moving around. */
-body.normalized-app-shell .action-drawer {
-    position: fixed !important;
-    top: var(--app-side-gap) !important;
-    right: var(--app-side-gap) !important;
-    bottom: var(--app-side-gap) !important;
-    left: auto !important;
-    width: var(--app-right-drawer-width) !important;
-    max-width: var(--app-right-drawer-width) !important;
-    min-width: var(--app-right-drawer-width) !important;
-    height: auto !important;
-    padding: 20px !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+body.timeline-shell .action-drawer {
+    inset: var(--rb-drawer-inset) var(--rb-drawer-inset) var(--rb-drawer-inset) auto;
+    width: var(--rb-drawer-width);
 }
 
-/* Main page area: same margins and padding everywhere, no per-page drifting. */
-body.normalized-app-shell .timeline-page {
-    margin-left: var(--app-left-rail-width) !important;
-    margin-right: calc(var(--app-right-drawer-width) + (var(--app-side-gap) * 2)) !important;
-    padding: 34px var(--app-page-x) 60px !important;
-    min-height: 100vh;
-    min-width: 0;
+/* Scale common UI elements without changing page-specific structure. */
+body.timeline-shell .timeline-header h1 {
+    font-size: clamp(2rem, calc(3.5rem * var(--rb-ui-scale)), 3.5rem);
 }
 
-/* Prevent individual pages/cards from becoming centered narrow islands unless intentionally printed. */
-body.normalized-app-shell .timeline-page > .timeline-header,
-body.normalized-app-shell .timeline-page > .timeline-form-surface,
-body.normalized-app-shell .timeline-page > .timeline-info-panel,
-body.normalized-app-shell .timeline-page > .timeline-board,
-body.normalized-app-shell .timeline-page > .admin-board,
-body.normalized-app-shell .timeline-page > .prints-center-surface,
-body.normalized-app-shell .timeline-page > .roomboard-print-sheet,
-body.normalized-app-shell .timeline-page > section {
-    width: 100%;
-    max-width: none;
+body.timeline-shell .timeline-clock-card span {
+    font-size: clamp(1.85rem, calc(2.6rem * var(--rb-ui-scale)), 2.6rem);
 }
 
-/* Same title/header scale on all non-kiosk pages. */
-body.normalized-app-shell .timeline-header {
-    min-height: 86px;
-    margin-bottom: 26px !important;
-    align-items: flex-start;
+body.timeline-shell .rail-clock strong {
+    font-size: clamp(1.45rem, calc(2rem * var(--rb-ui-scale)), 2rem);
 }
 
-body.normalized-app-shell .timeline-header h1 {
-    font-size: clamp(2.15rem, 3.2vw, 3.15rem) !important;
-    line-height: .98 !important;
-    letter-spacing: -.05em !important;
+body.timeline-shell .rail-periods {
+    gap: clamp(9px, calc(17px * var(--rb-ui-scale)), 17px);
 }
 
-body.normalized-app-shell .timeline-header .muted {
-    max-width: 760px;
-    font-size: .98rem !important;
-    line-height: 1.45 !important;
+body.timeline-shell .rail-periods span {
+    min-height: clamp(38px, calc(52px * var(--rb-ui-scale)), 52px);
+    font-size: clamp(1rem, calc(1.35rem * var(--rb-ui-scale)), 1.35rem);
+    border-radius: clamp(14px, calc(20px * var(--rb-ui-scale)), 20px);
 }
 
-/* Same surface/card scale across management, settings, prints, help/about. */
-body.normalized-app-shell .timeline-info-panel,
-body.normalized-app-shell .timeline-form-surface {
-    padding: 24px !important;
-    border-radius: 30px !important;
+body.timeline-shell .drawer-nav a,
+body.timeline-shell .drawer-home-return {
+    padding: clamp(10px, calc(15px * var(--rb-ui-scale)), 15px) clamp(11px, calc(17px * var(--rb-ui-scale)), 17px);
+    border-radius: clamp(14px, calc(19px * var(--rb-ui-scale)), 19px);
+    font-size: clamp(.82rem, calc(.95rem * var(--rb-ui-scale)), .95rem);
 }
 
-body.normalized-app-shell .timeline-form,
-body.normalized-app-shell .management-form {
-    gap: 16px !important;
+body.timeline-shell .drawer-group h3 {
+    font-size: clamp(.66rem, calc(.76rem * var(--rb-ui-scale)), .76rem);
 }
 
-body.normalized-app-shell .simple-card,
-body.normalized-app-shell .management-card,
-body.normalized-app-shell .print-choice-card {
-    border-radius: 24px !important;
+body.timeline-shell .timeline-info-panel,
+body.timeline-shell .timeline-form-surface {
+    padding: clamp(18px, calc(24px * var(--rb-ui-scale)), 24px);
+    border-radius: clamp(22px, calc(32px * var(--rb-ui-scale)), 32px);
 }
 
-/* Make form grids predictable instead of page-specific scale jumps. */
-body.normalized-app-shell .form-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+body.timeline-shell .timeline-header {
+    gap: clamp(14px, calc(22px * var(--rb-ui-scale)), 22px);
+    margin-bottom: clamp(18px, calc(28px * var(--rb-ui-scale)), 28px);
 }
 
-body.normalized-app-shell .form-row.three {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+body.timeline-shell .timeline-lower-grid {
+    gap: clamp(16px, calc(22px * var(--rb-ui-scale)), 22px);
 }
 
-body.normalized-app-shell input,
-body.normalized-app-shell select,
-body.normalized-app-shell textarea,
-body.normalized-app-shell button,
-body.normalized-app-shell .primary-button,
-body.normalized-app-shell .secondary-button,
-body.normalized-app-shell .danger-button,
-body.normalized-app-shell .success-button {
-    max-width: 100%;
+body.timeline-shell .timeline-booking {
+    font-size: clamp(.72rem, calc(.9rem * var(--rb-ui-scale)), .9rem);
 }
 
-/* Drawer typography/spacing: same everywhere, and no growth based on page content. */
-body.normalized-app-shell .grouped-drawer-nav {
-    gap: 14px !important;
-}
-
-body.normalized-app-shell .drawer-group {
-    gap: 8px !important;
-}
-
-body.normalized-app-shell .drawer-group h3 {
-    font-size: .72rem !important;
-    line-height: 1 !important;
-    margin: 0 0 4px !important;
-}
-
-body.normalized-app-shell .drawer-nav a,
-body.normalized-app-shell .drawer-home-return {
-    padding: 11px 12px !important;
-    border-radius: 15px !important;
-    font-size: .88rem !important;
-    line-height: 1.15 !important;
-}
-
-/* Keep admin timeline itself as the visual reference. */
-body.normalized-app-shell .admin-board .timeline-grid {
-    width: 100%;
-}
-
-body.normalized-app-shell .timeline-board-title h2,
-body.normalized-app-shell .section-title h2 {
-    font-size: 1.45rem !important;
-}
-
-/* Print pages on screen stay aligned with the app frame, but actual print rules remain untouched. */
-body.normalized-app-shell .roomboard-print-sheet {
-    margin-inline: 0 !important;
-}
-
-/* Responsive: when there is not enough space, drawer becomes normal flow instead of drifting. */
-@media (max-width: 1260px) {
-    body.normalized-app-shell {
-        --app-right-drawer-width: 248px;
-        --app-side-gap: 22px;
-        --app-page-x: 24px;
-    }
-
-    body.normalized-app-shell .action-drawer {
-        width: var(--app-right-drawer-width) !important;
-        max-width: var(--app-right-drawer-width) !important;
-        min-width: var(--app-right-drawer-width) !important;
-        padding: 16px !important;
+/* 1920x1080 and above: original baseline. */
+@media (min-width: 1800px) and (min-height: 900px) {
+    body.timeline-shell {
+        --rb-ui-scale: 1;
+        --rb-rail-width: 176px;
+        --rb-drawer-width: 282px;
+        --rb-drawer-inset: 32px;
+        --rb-page-pad-x: 42px;
+        --rb-page-pad-top: 38px;
+        --rb-page-pad-bottom: 60px;
     }
 }
 
-@media (max-width: 1040px) {
-    body.normalized-app-shell .time-rail {
-        display: none !important;
-    }
-
-    body.normalized-app-shell .timeline-page {
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        padding: 24px 18px 32px !important;
-    }
-
-    body.normalized-app-shell .action-drawer {
-        position: static !important;
-        width: auto !important;
-        max-width: none !important;
-        min-width: 0 !important;
-        margin: 0 18px 24px !important;
-        max-height: none !important;
-    }
-
-    body.normalized-app-shell .drawer-nav {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+/* 1680x1050 / 1680x900 class */
+@media (max-width: 1799px) {
+    body.timeline-shell {
+        --rb-ui-scale: .94;
+        --rb-rail-width: 164px;
+        --rb-drawer-width: 266px;
+        --rb-drawer-inset: 28px;
+        --rb-page-pad-x: 36px;
+        --rb-page-pad-top: 34px;
+        --rb-page-pad-bottom: 52px;
     }
 }
 
-@media (max-width: 720px) {
-    body.normalized-app-shell .timeline-header {
-        min-height: 0;
-        display: grid;
-        gap: 16px;
-    }
-
-    body.normalized-app-shell .timeline-header h1 {
-        font-size: 2rem !important;
-    }
-
-    body.normalized-app-shell .form-row,
-    body.normalized-app-shell .form-row.three,
-    body.normalized-app-shell .drawer-nav {
-        grid-template-columns: 1fr;
+/* 1600x900 class */
+@media (max-width: 1640px) {
+    body.timeline-shell {
+        --rb-ui-scale: .90;
+        --rb-rail-width: 154px;
+        --rb-drawer-width: 252px;
+        --rb-drawer-inset: 24px;
+        --rb-page-pad-x: 32px;
+        --rb-page-pad-top: 30px;
+        --rb-page-pad-bottom: 48px;
     }
 }
 
-/* Do not let screen layout normalization affect real paper output. */
+/* 1440x900 / 1440x810 class */
+@media (max-width: 1480px) {
+    body.timeline-shell {
+        --rb-ui-scale: .84;
+        --rb-rail-width: 140px;
+        --rb-drawer-width: 236px;
+        --rb-drawer-inset: 20px;
+        --rb-page-pad-x: 26px;
+        --rb-page-pad-top: 26px;
+        --rb-page-pad-bottom: 42px;
+    }
+
+    body.timeline-shell .time-rail {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    body.timeline-shell .action-drawer {
+        padding: 18px;
+        border-radius: 28px;
+    }
+}
+
+/* 1366x768 common laptop class */
+@media (max-width: 1380px) {
+    body.timeline-shell {
+        --rb-ui-scale: .78;
+        --rb-rail-width: 126px;
+        --rb-drawer-width: 220px;
+        --rb-drawer-inset: 16px;
+        --rb-page-pad-x: 22px;
+        --rb-page-pad-top: 22px;
+        --rb-page-pad-bottom: 36px;
+    }
+
+    body.timeline-shell .time-rail {
+        padding: 20px 12px;
+    }
+
+    body.timeline-shell .rail-logo.app-rail-logo {
+        width: 46px !important;
+        height: 46px !important;
+    }
+
+    body.timeline-shell .rail-periods {
+        margin-top: 34px;
+    }
+
+    body.timeline-shell .action-drawer {
+        padding: 15px;
+        border-radius: 24px;
+    }
+
+    body.timeline-shell .grouped-drawer-nav {
+        gap: 11px;
+    }
+}
+
+/* 1280x800 / 1280x720 class */
+@media (max-width: 1300px) {
+    body.timeline-shell {
+        --rb-ui-scale: .72;
+        --rb-rail-width: 112px;
+        --rb-drawer-width: 204px;
+        --rb-drawer-inset: 14px;
+        --rb-page-pad-x: 18px;
+        --rb-page-pad-top: 20px;
+        --rb-page-pad-bottom: 34px;
+    }
+
+    body.timeline-shell .time-rail {
+        padding: 18px 10px;
+    }
+
+    body.timeline-shell .rail-logo.app-rail-logo {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    body.timeline-shell .rail-teaching-status {
+        font-size: .68rem;
+    }
+
+    body.timeline-shell .drawer-nav a,
+    body.timeline-shell .drawer-home-return {
+        font-size: .78rem;
+        line-height: 1.1;
+    }
+}
+
+/* 1152x864 class */
+@media (max-width: 1180px) {
+    body.timeline-shell {
+        --rb-ui-scale: .66;
+        --rb-rail-width: 96px;
+        --rb-drawer-width: 188px;
+        --rb-drawer-inset: 12px;
+        --rb-page-pad-x: 16px;
+        --rb-page-pad-top: 18px;
+        --rb-page-pad-bottom: 30px;
+    }
+
+    body.timeline-shell .time-rail {
+        padding: 16px 8px;
+    }
+
+    body.timeline-shell .rail-logo.app-rail-logo {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    body.timeline-shell .rail-periods span + span::before {
+        display: none;
+    }
+
+    body.timeline-shell .action-drawer {
+        padding: 12px;
+        border-radius: 20px;
+    }
+}
+
+/* 1024x768: keep both rails if possible, but very compact. */
+@media (max-width: 1060px) {
+    body.timeline-shell {
+        --rb-ui-scale: .60;
+        --rb-rail-width: 76px;
+        --rb-drawer-width: 168px;
+        --rb-drawer-inset: 8px;
+        --rb-page-pad-x: 12px;
+        --rb-page-pad-top: 14px;
+        --rb-page-pad-bottom: 24px;
+    }
+
+    body.timeline-shell .time-rail {
+        padding: 12px 6px;
+    }
+
+    body.timeline-shell .rail-logo.app-rail-logo {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    body.timeline-shell .rail-clock {
+        margin-top: 18px;
+    }
+
+    body.timeline-shell .rail-teaching-status {
+        display: none;
+    }
+
+    body.timeline-shell .rail-periods {
+        margin-top: 24px;
+        gap: 7px;
+    }
+
+    body.timeline-shell .rail-periods span {
+        min-height: 30px;
+        font-size: .78rem;
+        border-radius: 11px;
+    }
+
+    body.timeline-shell .action-drawer {
+        padding: 9px;
+        border-radius: 16px;
+    }
+
+    body.timeline-shell .drawer-group h3 {
+        display: none;
+    }
+
+    body.timeline-shell .grouped-drawer-nav {
+        gap: 6px;
+    }
+
+    body.timeline-shell .drawer-nav a,
+    body.timeline-shell .drawer-home-return {
+        padding: 8px 9px;
+        border-radius: 11px;
+        font-size: .72rem;
+    }
+
+    body.timeline-shell .timeline-header h1 {
+        font-size: 1.75rem !important;
+    }
+
+    body.timeline-shell .timeline-header .muted {
+        font-size: .82rem;
+    }
+}
+
+/* Height-based tightening for 768px tall screens. */
+@media (max-height: 790px) and (max-width: 1380px) {
+    body.timeline-shell .time-rail {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    body.timeline-shell .rail-clock {
+        margin-top: 14px;
+    }
+
+    body.timeline-shell .rail-periods {
+        margin-top: 22px;
+    }
+
+    body.timeline-shell .action-drawer {
+        top: 8px;
+        bottom: 8px;
+        overflow-y: auto;
+    }
+
+    body.timeline-shell .timeline-page {
+        padding-top: 14px;
+    }
+}
+
+/* At very narrow widths below the supported desktop range, fall back to stacked layout. */
+@media (max-width: 980px) {
+    body.timeline-shell .time-rail {
+        display: none;
+    }
+
+    body.timeline-shell .timeline-page {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 18px 14px 28px;
+    }
+
+    body.timeline-shell .action-drawer {
+        position: static;
+        width: auto;
+        margin: 0 14px 18px;
+        max-height: none;
+    }
+}
+
+/* Print must stay paper-driven, not screen-scaled. */
 @media print {
-    body.normalized-app-shell {
-        overflow: visible !important;
+    body.timeline-shell {
+        --rb-ui-scale: 1;
     }
 
-    body.normalized-app-shell .timeline-page {
+    body.timeline-shell .timeline-page {
         margin: 0 !important;
         padding: 0 !important;
     }

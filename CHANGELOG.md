@@ -570,14 +570,23 @@
 - This patch updates UI and service methods only.
 - It does not modify the SQLite schema or existing data structure.
 
-## v1.0.17 - Normalize non-kiosk page layout
+## v1.0.18 - Restore layout baseline and add resolution scaling
 
-### Changed
-- Normalized sizing and spacing across all non-kiosk pages.
-- Stabilized right drawer width and position.
-- Standardized page content margins, headers, surfaces, cards and forms.
-- Kiosk/student display pages are excluded.
+### Fixed
+- Reverted the hard layout normalization from v1.0.17.
+- Restored the original right drawer/home layout baseline.
+
+### Added
+- Responsive scaling rules for desktop resolutions:
+  - 1920x1080 baseline
+  - 1680-class
+  - 1600-class
+  - 1440-class
+  - 1366x768
+  - 1280-class
+  - 1152-class
+  - 1024x768
 
 ### Notes
-- This patch only changes layout CSS and shared layout body classes.
+- This patch only changes shared layout/CSS.
 - It does not modify the SQLite schema or existing data.

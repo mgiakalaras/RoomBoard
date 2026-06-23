@@ -438,12 +438,11 @@ Print and reference-data update:
 - Editing reference data updates existing records and existing bookings display the corrected names.
 - No SQLite schema changes are included.
 
-## v1.0.17 notes
+## v1.0.18 notes
 
-Layout normalization update:
-- Normalized sizing for all non-kiosk pages.
-- Kept the main schedule layout as the visual reference.
-- Fixed the right drawer to a stable width and position.
-- Standardized page margins, headers, cards and form spacing.
-- Kiosk pages are excluded from this normalization.
+Responsive layout correction:
+- Reverts the v1.0.17 hard normalization approach.
+- Restores the original v1.0.16 layout baseline, including the home/right drawer.
+- Adds resolution-based scaling from 1920x1080 down to 1024x768.
+- Kiosk behavior is not changed.
 - No database or seed changes are included.
