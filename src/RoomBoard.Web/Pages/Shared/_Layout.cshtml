@@ -9,6 +9,7 @@
     var isOutsideTeachingHours = firstPeriod is not null && lastPeriod is not null && (now < firstPeriod.StartTime || now > lastPeriod.EndTime);
     var currentPath = Context.Request.Path.Value ?? "/";
     var isTeacherHomePage = currentPath == "/" || currentPath.Equals("/Index", StringComparison.OrdinalIgnoreCase);
+    var isKioskPage = currentPath.StartsWith("/Kiosk", StringComparison.OrdinalIgnoreCase);
 
     var railStatusText = currentPeriod is not null
         ? $"{currentPeriod.Label} ώρα"
@@ -27,7 +28,7 @@
     <title>@ViewData["Title"] - RoomBoard</title>
     <link rel="stylesheet" href="~/css/roomboard.css" asp-append-version="true" />
 </head>
-<body class="timeline-shell">
+<body class="timeline-shell @(isKioskPage ? "kiosk-layout-shell" : "normalized-app-shell")">
     <aside class="time-rail" aria-label="Χρονική μπάρα">
         <a class="rail-logo app-rail-logo" asp-page="/Index" title="Προβολή καθηγητών">
             <img src="~/img/app/roomboard-app-icon.svg" alt="RoomBoard" />

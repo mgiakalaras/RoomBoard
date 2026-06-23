@@ -569,3 +569,15 @@
 ### Notes
 - This patch updates UI and service methods only.
 - It does not modify the SQLite schema or existing data structure.
+
+## v1.0.17 - Normalize non-kiosk page layout
+
+### Changed
+- Normalized sizing and spacing across all non-kiosk pages.
+- Stabilized right drawer width and position.
+- Standardized page content margins, headers, surfaces, cards and forms.
+- Kiosk/student display pages are excluded.
+
+### Notes
+- This patch only changes layout CSS and shared layout body classes.
+- It does not modify the SQLite schema or existing data.

@@ -7367,3 +7367,241 @@ body.timeline-shell:has(.kiosk-timeline-header) .public-school-identity {
         padding: 1px 4px;
     }
 }
+
+/* =========================================================
+   v1.0.17 Normalized non-kiosk layout sizing
+   No database changes
+   ========================================================= */
+
+/*
+   Keep every normal app/admin page on the same visual scale as the main schedule.
+   Kiosk pages are excluded via .kiosk-layout-shell.
+*/
+body.normalized-app-shell {
+    --app-left-rail-width: 176px;
+    --app-right-drawer-width: 282px;
+    --app-side-gap: 32px;
+    --app-page-x: clamp(28px, 2.4vw, 42px);
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+body.normalized-app-shell *,
+body.normalized-app-shell *::before,
+body.normalized-app-shell *::after {
+    box-sizing: border-box;
+}
+
+/* Left rail: fixed size and fixed position on all normal pages. */
+body.normalized-app-shell .time-rail {
+    width: var(--app-left-rail-width) !important;
+    padding: 30px 20px !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Right drawer: stable position/width, internal scrolling instead of moving around. */
+body.normalized-app-shell .action-drawer {
+    position: fixed !important;
+    top: var(--app-side-gap) !important;
+    right: var(--app-side-gap) !important;
+    bottom: var(--app-side-gap) !important;
+    left: auto !important;
+    width: var(--app-right-drawer-width) !important;
+    max-width: var(--app-right-drawer-width) !important;
+    min-width: var(--app-right-drawer-width) !important;
+    height: auto !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Main page area: same margins and padding everywhere, no per-page drifting. */
+body.normalized-app-shell .timeline-page {
+    margin-left: var(--app-left-rail-width) !important;
+    margin-right: calc(var(--app-right-drawer-width) + (var(--app-side-gap) * 2)) !important;
+    padding: 34px var(--app-page-x) 60px !important;
+    min-height: 100vh;
+    min-width: 0;
+}
+
+/* Prevent individual pages/cards from becoming centered narrow islands unless intentionally printed. */
+body.normalized-app-shell .timeline-page > .timeline-header,
+body.normalized-app-shell .timeline-page > .timeline-form-surface,
+body.normalized-app-shell .timeline-page > .timeline-info-panel,
+body.normalized-app-shell .timeline-page > .timeline-board,
+body.normalized-app-shell .timeline-page > .admin-board,
+body.normalized-app-shell .timeline-page > .prints-center-surface,
+body.normalized-app-shell .timeline-page > .roomboard-print-sheet,
+body.normalized-app-shell .timeline-page > section {
+    width: 100%;
+    max-width: none;
+}
+
+/* Same title/header scale on all non-kiosk pages. */
+body.normalized-app-shell .timeline-header {
+    min-height: 86px;
+    margin-bottom: 26px !important;
+    align-items: flex-start;
+}
+
+body.normalized-app-shell .timeline-header h1 {
+    font-size: clamp(2.15rem, 3.2vw, 3.15rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.05em !important;
+}
+
+body.normalized-app-shell .timeline-header .muted {
+    max-width: 760px;
+    font-size: .98rem !important;
+    line-height: 1.45 !important;
+}
+
+/* Same surface/card scale across management, settings, prints, help/about. */
+body.normalized-app-shell .timeline-info-panel,
+body.normalized-app-shell .timeline-form-surface {
+    padding: 24px !important;
+    border-radius: 30px !important;
+}
+
+body.normalized-app-shell .timeline-form,
+body.normalized-app-shell .management-form {
+    gap: 16px !important;
+}
+
+body.normalized-app-shell .simple-card,
+body.normalized-app-shell .management-card,
+body.normalized-app-shell .print-choice-card {
+    border-radius: 24px !important;
+}
+
+/* Make form grids predictable instead of page-specific scale jumps. */
+body.normalized-app-shell .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+body.normalized-app-shell .form-row.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.normalized-app-shell input,
+body.normalized-app-shell select,
+body.normalized-app-shell textarea,
+body.normalized-app-shell button,
+body.normalized-app-shell .primary-button,
+body.normalized-app-shell .secondary-button,
+body.normalized-app-shell .danger-button,
+body.normalized-app-shell .success-button {
+    max-width: 100%;
+}
+
+/* Drawer typography/spacing: same everywhere, and no growth based on page content. */
+body.normalized-app-shell .grouped-drawer-nav {
+    gap: 14px !important;
+}
+
+body.normalized-app-shell .drawer-group {
+    gap: 8px !important;
+}
+
+body.normalized-app-shell .drawer-group h3 {
+    font-size: .72rem !important;
+    line-height: 1 !important;
+    margin: 0 0 4px !important;
+}
+
+body.normalized-app-shell .drawer-nav a,
+body.normalized-app-shell .drawer-home-return {
+    padding: 11px 12px !important;
+    border-radius: 15px !important;
+    font-size: .88rem !important;
+    line-height: 1.15 !important;
+}
+
+/* Keep admin timeline itself as the visual reference. */
+body.normalized-app-shell .admin-board .timeline-grid {
+    width: 100%;
+}
+
+body.normalized-app-shell .timeline-board-title h2,
+body.normalized-app-shell .section-title h2 {
+    font-size: 1.45rem !important;
+}
+
+/* Print pages on screen stay aligned with the app frame, but actual print rules remain untouched. */
+body.normalized-app-shell .roomboard-print-sheet {
+    margin-inline: 0 !important;
+}
+
+/* Responsive: when there is not enough space, drawer becomes normal flow instead of drifting. */
+@media (max-width: 1260px) {
+    body.normalized-app-shell {
+        --app-right-drawer-width: 248px;
+        --app-side-gap: 22px;
+        --app-page-x: 24px;
+    }
+
+    body.normalized-app-shell .action-drawer {
+        width: var(--app-right-drawer-width) !important;
+        max-width: var(--app-right-drawer-width) !important;
+        min-width: var(--app-right-drawer-width) !important;
+        padding: 16px !important;
+    }
+}
+
+@media (max-width: 1040px) {
+    body.normalized-app-shell .time-rail {
+        display: none !important;
+    }
+
+    body.normalized-app-shell .timeline-page {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 24px 18px 32px !important;
+    }
+
+    body.normalized-app-shell .action-drawer {
+        position: static !important;
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin: 0 18px 24px !important;
+        max-height: none !important;
+    }
+
+    body.normalized-app-shell .drawer-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    body.normalized-app-shell .timeline-header {
+        min-height: 0;
+        display: grid;
+        gap: 16px;
+    }
+
+    body.normalized-app-shell .timeline-header h1 {
+        font-size: 2rem !important;
+    }
+
+    body.normalized-app-shell .form-row,
+    body.normalized-app-shell .form-row.three,
+    body.normalized-app-shell .drawer-nav {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Do not let screen layout normalization affect real paper output. */
+@media print {
+    body.normalized-app-shell {
+        overflow: visible !important;
+    }
+
+    body.normalized-app-shell .timeline-page {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

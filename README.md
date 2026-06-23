@@ -437,3 +437,13 @@ Print and reference-data update:
 - Added editing support for rooms, teachers and class groups.
 - Editing reference data updates existing records and existing bookings display the corrected names.
 - No SQLite schema changes are included.
+
+## v1.0.17 notes
+
+Layout normalization update:
+- Normalized sizing for all non-kiosk pages.
+- Kept the main schedule layout as the visual reference.
+- Fixed the right drawer to a stable width and position.
+- Standardized page margins, headers, cards and form spacing.
+- Kiosk pages are excluded from this normalization.
+- No database or seed changes are included.
