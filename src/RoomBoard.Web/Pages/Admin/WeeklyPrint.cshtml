@@ -4,13 +4,17 @@
 @{
     ViewData["Title"] = "Εβδομαδιαία εκτύπωση";
     var periodCount = Math.Max(Model.Periods.Count, 1);
+    var activeDays = Model.WeekDays
+        .Where(day => Model.BookingsByDate.TryGetValue(day, out var bookings) && bookings.Any())
+        .ToList();
+    var totalBookings = activeDays.Sum(day => Model.BookingsByDate[day].Count);
 }
 
 <section class="timeline-header weekly-screen-controls no-print">
     <div>
         <p class="eyebrow">Εκτύπωση</p>
-        <h1>Εβδομαδιαίο πρόγραμμα κρατήσεων</h1>
-        <p class="muted">Timeline εκτύπωση ανά ημέρα, αίθουσα και διδακτική ώρα.</p>
+        <h1>Εβδομαδιαίο πρόγραμμα αλλαγών</h1>
+        <p class="muted">Εμφανίζονται μόνο οι ημέρες και οι αίθουσες που έχουν κρατήσεις/αλλαγές.</p>
     </div>
 
     <div class="timeline-header-actions">
@@ -28,7 +32,7 @@
     </div>
 </section>
 
-<section class="roomboard-print-sheet weekly-timeline-print-sheet">
+<section class="roomboard-print-sheet weekly-timeline-print-sheet compact-changes-print-sheet">
     <header class="roomboard-print-header">
         <div class="print-school-block">
             @if (!string.IsNullOrWhiteSpace(Model.SchoolSettings.LogoPath))
@@ -59,75 +63,87 @@
         </div>
 
         <div class="print-report-block">
-            <strong>Εβδομαδιαία εκτύπωση</strong>
+            <strong>Εβδομαδιαία εκτύπωση αλλαγών</strong>
             <span>@Model.WeekRangeText</span>
+            <small>@totalBookings κρατήσεις · @activeDays.Count ημέρες με αλλαγές</small>
             <small>Εκτύπωση: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
         </div>
     </header>
 
-    @foreach (var day in Model.WeekDays)
+    @if (activeDays.Count == 0)
     {
-        var dayBookings = Model.BookingsByDate.TryGetValue(day, out var foundBookings)
-            ? foundBookings
-            : Array.Empty<RoomBoard.Web.Models.BookingDetails>();
-
-        <section class="print-day-section">
-            <header class="print-day-header">
-                <h2>@day.ToString("dddd, dd MMMM yyyy")</h2>
-                <span>@dayBookings.Count κρατήσεις</span>
-            </header>
-
-            <section class="print-timeline-board" style="--period-count:@periodCount">
-                <div class="print-timeline-grid">
-                    <div class="print-timeline-corner">Αίθουσα</div>
-
-                    @foreach (var period in Model.Periods)
-                    {
-                        <div class="print-period-head">
-                            <strong>@period.Label</strong>
-                            <span>@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm")</span>
-                        </div>
-                    }
-
-                    @foreach (var room in Model.Rooms)
-                    {
-                        var roomBookings = dayBookings
-                            .Where(b => b.Room.Id == room.Id)
-                            .OrderBy(b => b.StartPeriod.Number)
-                            .ToList();
-
-                        <div class="print-room-label">
-                            <strong>@room.Name</strong>
-                            <span>@room.Location</span>
-                        </div>
-
-                        <div class="print-timeline-lane">
-                            @foreach (var period in Model.Periods)
-                            {
-                                var isBusy = roomBookings.Any(b => b.CoversPeriodNumber(period.Number));
-                                <span class="print-lane-slot @(isBusy ? "taken" : "open")"></span>
-                            }
-
-                            @foreach (var booking in roomBookings)
-                            {
-                                var startIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.StartPeriod.Id);
-                                var endIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.EndPeriod.Id);
-
-                                if (startIndex >= 0 && endIndex >= startIndex)
-                                {
-                                    var span = endIndex - startIndex + 1;
-                                    <article class="print-booking-block" style="--start:@(startIndex + 1); --span:@span">
-                                        <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
-                                        <span>@booking.Teacher.FullName</span>
-                                        <small>@booking.PeriodRangeLabel</small>
-                                    </article>
-                                }
-                            }
-                        </div>
-                    }
-                </div>
-            </section>
+        <section class="print-empty-state">
+            <strong>Δεν υπάρχουν κρατήσεις/αλλαγές για την εβδομάδα.</strong>
+            <span>Δεν εκτυπώνονται άδειες ημέρες ή άδειες αίθουσες.</span>
         </section>
+    }
+    else
+    {
+        @foreach (var day in activeDays)
+        {
+            var dayBookings = Model.BookingsByDate[day];
+            var printRooms = Model.Rooms
+                .Where(room => dayBookings.Any(booking => booking.Room.Id == room.Id))
+                .ToList();
+
+            <section class="print-day-section">
+                <header class="print-day-header">
+                    <h2>@day.ToString("dddd, dd MMMM yyyy")</h2>
+                    <span>@dayBookings.Count κρατήσεις · @printRooms.Count αίθουσες</span>
+                </header>
+
+                <section class="print-timeline-board" style="--period-count:@periodCount">
+                    <div class="print-timeline-grid print-filtered-rooms-grid">
+                        <div class="print-timeline-corner">Αίθουσα</div>
+
+                        @foreach (var period in Model.Periods)
+                        {
+                            <div class="print-period-head">
+                                <strong>@period.Label</strong>
+                                <span>@period.StartTime.ToString("HH:mm") - @period.EndTime.ToString("HH:mm")</span>
+                            </div>
+                        }
+
+                        @foreach (var room in printRooms)
+                        {
+                            var roomBookings = dayBookings
+                                .Where(b => b.Room.Id == room.Id)
+                                .OrderBy(b => b.StartPeriod.Number)
+                                .ToList();
+
+                            <div class="print-room-label">
+                                <strong>@room.Name</strong>
+                                <span>@room.Location</span>
+                            </div>
+
+                            <div class="print-timeline-lane">
+                                @foreach (var period in Model.Periods)
+                                {
+                                    var isBusy = roomBookings.Any(b => b.CoversPeriodNumber(period.Number));
+                                    <span class="print-lane-slot @(isBusy ? "taken" : "open")"></span>
+                                }
+
+                                @foreach (var booking in roomBookings)
+                                {
+                                    var startIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.StartPeriod.Id);
+                                    var endIndex = Model.Periods.ToList().FindIndex(p => p.Id == booking.EndPeriod.Id);
+
+                                    if (startIndex >= 0 && endIndex >= startIndex)
+                                    {
+                                        var span = endIndex - startIndex + 1;
+                                        <article class="print-booking-block" style="--start:@(startIndex + 1); --span:@span">
+                                            <strong>@(booking.ClassGroup?.Name ?? "-") · @booking.SubjectOrPurpose</strong>
+                                            <span>@booking.Teacher.FullName</span>
+                                            <small>@booking.PeriodRangeLabel</small>
+                                        </article>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </section>
+            </section>
+        }
     }
 
     <footer class="roomboard-print-footer">
@@ -135,6 +151,6 @@
             <img src="~/img/app/roomboard-app-icon.svg" alt="RoomBoard" />
             <span>RoomBoard</span>
         </div>
-        <span>Οι κενές θέσεις είναι διαθέσιμες για κράτηση.</span>
+        <span>Εκτύπωση μόνο ημερών και αιθουσών με κρατήσεις/αλλαγές.</span>
     </footer>
 </section>

@@ -419,3 +419,12 @@ Print layout update:
 - Print footers include the RoomBoard app logo.
 - Weekly print is organized as one timeline board per day.
 - No database or seed changes are included.
+
+## v1.0.15 notes
+
+Print filtering update:
+- Daily print now shows only rooms that have bookings/changes for the selected day.
+- Weekly print now shows only days that have bookings/changes.
+- Weekly print also shows only rooms that have bookings/changes for each printed day.
+- Empty days/rooms are no longer printed as large blank boards.
+- No database or seed changes are included.

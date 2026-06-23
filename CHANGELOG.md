@@ -541,3 +541,15 @@
 ### Notes
 - This patch only changes print UI/pages.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.15 - Print only rooms and days with bookings
+
+### Changed
+- Daily print filters out rooms without bookings for the selected day.
+- Weekly print filters out days without bookings.
+- Weekly print filters out rooms without bookings for each printed day.
+- Empty printouts now show a compact message instead of large blank boards.
+
+### Notes
+- This patch only changes print UI/pages.
+- It does not modify the SQLite schema or existing data.

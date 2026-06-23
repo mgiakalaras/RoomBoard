@@ -7145,3 +7145,66 @@ body.timeline-shell:has(.kiosk-timeline-header) .public-school-identity {
         page-break-inside: avoid;
     }
 }
+
+/* =========================================================
+   v1.0.15 Print only rooms/days with bookings
+   No database changes
+   ========================================================= */
+
+.compact-changes-print-sheet .print-timeline-grid {
+    margin-top: 0;
+}
+
+.compact-changes-print-sheet .print-room-label,
+.compact-changes-print-sheet .print-timeline-lane,
+.compact-changes-print-sheet .print-lane-slot {
+    min-height: 52px;
+}
+
+.compact-changes-print-sheet .print-booking-block {
+    top: 6px;
+    bottom: 6px;
+}
+
+.print-empty-state {
+    display: grid;
+    gap: 6px;
+    padding: 28px;
+    margin: 16px 0;
+    border-radius: 18px;
+    background: #f4ead7;
+    border: 1px solid rgba(60, 42, 22, .16);
+    color: #241a12;
+}
+
+.print-empty-state strong {
+    font-size: 1.05rem;
+}
+
+.print-empty-state span {
+    color: #755b38;
+    font-weight: 800;
+}
+
+@media print {
+    .compact-changes-print-sheet .print-room-label,
+    .compact-changes-print-sheet .print-timeline-lane,
+    .compact-changes-print-sheet .print-lane-slot {
+        min-height: 38px;
+    }
+
+    .compact-changes-print-sheet .print-booking-block {
+        top: 3px;
+        bottom: 3px;
+    }
+
+    .print-empty-state {
+        padding: 12px;
+        border-radius: 0;
+        font-size: 9px;
+    }
+
+    .print-empty-state strong {
+        font-size: 10px;
+    }
+}
