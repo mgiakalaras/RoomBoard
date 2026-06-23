@@ -17,6 +17,9 @@ public sealed class TeachersModel : PageModel
     [BindProperty]
     public AddTeacherInput NewTeacher { get; set; } = new();
 
+    [BindProperty]
+    public EditTeacherInput EditTeacher { get; set; } = new();
+
     public IReadOnlyList<Teacher> ActiveTeachers { get; private set; } = Array.Empty<Teacher>();
     public IReadOnlyList<Teacher> InactiveTeachers { get; private set; } = Array.Empty<Teacher>();
     public string? ResultMessage { get; private set; }
@@ -45,6 +48,25 @@ public sealed class TeachersModel : PageModel
         {
             return RedirectToPage("/Admin/Teachers");
         }
+
+        LoadTeachers();
+        return Page();
+    }
+
+
+    public IActionResult OnPostEdit()
+    {
+        if (!ModelState.IsValid)
+        {
+            LoadTeachers();
+            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultSuccess = false;
+            return Page();
+        }
+
+        var result = _roomBoard.UpdateTeacher(EditTeacher);
+        ResultMessage = result.Message;
+        ResultSuccess = result.Success;
 
         LoadTeachers();
         return Page();

@@ -553,3 +553,19 @@
 ### Notes
 - This patch only changes print UI/pages.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.16 - Extra print rooms and editable reference data
+
+### Added
+- Extra room selection in daily and weekly print pages.
+- Edit forms for rooms.
+- Edit forms for teachers.
+- Edit forms for class groups.
+
+### Changed
+- Print pages now always include rooms with bookings and can optionally include selected extra empty rooms.
+- Existing bookings display corrected room/teacher/class group names after edits.
+
+### Notes
+- This patch updates UI and service methods only.
+- It does not modify the SQLite schema or existing data structure.

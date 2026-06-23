@@ -17,6 +17,9 @@ public sealed class DailyPrintModel : PageModel
     [BindProperty(SupportsGet = true)]
     public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
+    [BindProperty(SupportsGet = true)]
+    public int[] ExtraRoomIds { get; set; } = Array.Empty<int>();
+
     public SchoolSettings SchoolSettings { get; private set; } = new();
     public IReadOnlyList<Room> Rooms { get; private set; } = Array.Empty<Room>();
     public IReadOnlyList<LessonPeriod> Periods { get; private set; } = Array.Empty<LessonPeriod>();

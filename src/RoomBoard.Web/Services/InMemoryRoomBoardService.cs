@@ -421,6 +421,35 @@ public sealed class InMemoryRoomBoardService : IRoomBoardService
         }
     }
 
+
+    public (bool Success, string Message) UpdateRoom(EditRoomInput input)
+    {
+        lock (_lock)
+        {
+            var room = _rooms.FirstOrDefault(r => r.Id == input.Id);
+            if (room is null)
+            {
+                return (false, "Η αίθουσα δεν βρέθηκε.");
+            }
+
+            var name = input.Name.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return (false, "Συμπληρώστε όνομα αίθουσας.");
+            }
+
+            if (_rooms.Any(r => r.Id != input.Id && string.Equals(r.Name.Trim(), name, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                return (false, "Υπάρχει ήδη αίθουσα με αυτό το όνομα.");
+            }
+
+            room.Name = name;
+            room.Location = string.IsNullOrWhiteSpace(input.Location) ? "Χωρίς τοποθεσία" : input.Location.Trim();
+
+            return (true, "Η αίθουσα ενημερώθηκε.");
+        }
+    }
+
     public (bool Success, string Message) DeactivateRoom(int roomId)
     {
         lock (_lock)
@@ -487,6 +516,35 @@ public sealed class InMemoryRoomBoardService : IRoomBoardService
             });
 
             return (true, "Ο/Η καθηγητής/τρια προστέθηκε.");
+        }
+    }
+
+
+    public (bool Success, string Message) UpdateTeacher(EditTeacherInput input)
+    {
+        lock (_lock)
+        {
+            var teacher = _teachers.FirstOrDefault(t => t.Id == input.Id);
+            if (teacher is null)
+            {
+                return (false, "Ο/Η καθηγητής/τρια δεν βρέθηκε.");
+            }
+
+            var fullName = input.FullName.Trim();
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return (false, "Συμπληρώστε ονοματεπώνυμο καθηγητή/τριας.");
+            }
+
+            if (_teachers.Any(t => t.Id != input.Id && string.Equals(t.FullName.Trim(), fullName, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                return (false, "Υπάρχει ήδη καθηγητής/τρια με αυτό το ονοματεπώνυμο.");
+            }
+
+            teacher.FullName = fullName;
+            teacher.Specialty = string.IsNullOrWhiteSpace(input.Specialty) ? null : input.Specialty.Trim();
+
+            return (true, "Ο/Η καθηγητής/τρια ενημερώθηκε.");
         }
     }
 
@@ -561,6 +619,34 @@ public sealed class InMemoryRoomBoardService : IRoomBoardService
             });
 
             return (true, "Το τμήμα προστέθηκε.");
+        }
+    }
+
+
+    public (bool Success, string Message) UpdateClassGroup(EditClassGroupInput input)
+    {
+        lock (_lock)
+        {
+            var classGroup = _classGroups.FirstOrDefault(c => c.Id == input.Id);
+            if (classGroup is null)
+            {
+                return (false, "Το τμήμα δεν βρέθηκε.");
+            }
+
+            var name = input.Name.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return (false, "Συμπληρώστε όνομα τμήματος.");
+            }
+
+            if (_classGroups.Any(c => c.Id != input.Id && string.Equals(c.Name.Trim(), name, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                return (false, "Υπάρχει ήδη τμήμα με αυτό το όνομα.");
+            }
+
+            classGroup.Name = name;
+
+            return (true, "Το τμήμα ενημερώθηκε.");
         }
     }
 

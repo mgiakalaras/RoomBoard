@@ -4,25 +4,40 @@
 @{
     ViewData["Title"] = "Εβδομαδιαία εκτύπωση";
     var periodCount = Math.Max(Model.Periods.Count, 1);
+    var selectedExtraRoomIds = Model.ExtraRoomIds?.Distinct().ToHashSet() ?? new HashSet<int>();
     var activeDays = Model.WeekDays
-        .Where(day => Model.BookingsByDate.TryGetValue(day, out var bookings) && bookings.Any())
+        .Where(day => Model.BookingsByDate.TryGetValue(day, out var bookings) && (bookings.Any() || selectedExtraRoomIds.Any()))
         .ToList();
-    var totalBookings = activeDays.Sum(day => Model.BookingsByDate[day].Count);
+    var totalBookings = activeDays.Sum(day => Model.BookingsByDate.TryGetValue(day, out var bookings) ? bookings.Count : 0);
 }
 
 <section class="timeline-header weekly-screen-controls no-print">
     <div>
         <p class="eyebrow">Εκτύπωση</p>
         <h1>Εβδομαδιαίο πρόγραμμα αλλαγών</h1>
-        <p class="muted">Εμφανίζονται μόνο οι ημέρες και οι αίθουσες που έχουν κρατήσεις/αλλαγές.</p>
+        <p class="muted">Οι αίθουσες με κράτηση εκτυπώνονται πάντα. Μπορείτε να προσθέσετε και έξτρα άδειες αίθουσες.</p>
     </div>
 
     <div class="timeline-header-actions">
-        <form method="get" class="date-jump-form">
+        <form method="get" class="date-jump-form print-options-form">
             <label>
                 Εβδομάδα
                 <input asp-for="WeekStart" type="date" />
             </label>
+
+            <details class="extra-print-rooms">
+                <summary>+ Έξτρα αίθουσες</summary>
+                <div>
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <label>
+                            <input type="checkbox" name="ExtraRoomIds" value="@room.Id" checked="@selectedExtraRoomIds.Contains(room.Id)" />
+                            <span>@room.Name</span>
+                        </label>
+                    }
+                </div>
+            </details>
+
             <button type="submit">Προβολή</button>
         </form>
 
@@ -65,7 +80,7 @@
         <div class="print-report-block">
             <strong>Εβδομαδιαία εκτύπωση αλλαγών</strong>
             <span>@Model.WeekRangeText</span>
-            <small>@totalBookings κρατήσεις · @activeDays.Count ημέρες με αλλαγές</small>
+            <small>@totalBookings κρατήσεις · @activeDays.Count ημέρες εκτύπωσης</small>
             <small>Εκτύπωση: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
         </div>
     </header>
@@ -74,16 +89,20 @@
     {
         <section class="print-empty-state">
             <strong>Δεν υπάρχουν κρατήσεις/αλλαγές για την εβδομάδα.</strong>
-            <span>Δεν εκτυπώνονται άδειες ημέρες ή άδειες αίθουσες.</span>
+            <span>Επιλέξτε έξτρα αίθουσες από τις επιλογές εκτύπωσης αν θέλετε να εμφανιστούν άδειες γραμμές.</span>
         </section>
     }
     else
     {
         @foreach (var day in activeDays)
         {
-            var dayBookings = Model.BookingsByDate[day];
+            var dayBookings = Model.BookingsByDate.TryGetValue(day, out var foundBookings)
+                ? foundBookings
+                : Array.Empty<RoomBoard.Web.Models.BookingDetails>();
+
+            var bookedRoomIds = dayBookings.Select(booking => booking.Room.Id).Distinct().ToHashSet();
             var printRooms = Model.Rooms
-                .Where(room => dayBookings.Any(booking => booking.Room.Id == room.Id))
+                .Where(room => bookedRoomIds.Contains(room.Id) || selectedExtraRoomIds.Contains(room.Id))
                 .ToList();
 
             <section class="print-day-section">
@@ -111,9 +130,13 @@
                                 .OrderBy(b => b.StartPeriod.Number)
                                 .ToList();
 
-                            <div class="print-room-label">
+                            <div class="print-room-label @(roomBookings.Count == 0 ? "extra-room-label" : "")">
                                 <strong>@room.Name</strong>
                                 <span>@room.Location</span>
+                                @if (roomBookings.Count == 0)
+                                {
+                                    <small>έξτρα</small>
+                                }
                             </div>
 
                             <div class="print-timeline-lane">
@@ -151,6 +174,6 @@
             <img src="~/img/app/roomboard-app-icon.svg" alt="RoomBoard" />
             <span>RoomBoard</span>
         </div>
-        <span>Εκτύπωση μόνο ημερών και αιθουσών με κρατήσεις/αλλαγές.</span>
+        <span>Αίθουσες με κρατήσεις + προαιρετικά επιλεγμένες έξτρα αίθουσες.</span>
     </footer>
 </section>

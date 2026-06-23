@@ -1,3 +1,4 @@
+
 @page
 @model RoomBoard.Web.Pages.Admin.ClassGroupsModel
 @{
@@ -8,7 +9,7 @@
     <div>
         <p class="eyebrow">Βασικά δεδομένα</p>
         <h1>Τμήματα</h1>
-        <p class="muted">Προσθήκη, απενεργοποίηση και επανενεργοποίηση τμημάτων που χρησιμοποιούνται στις κρατήσεις.</p>
+        <p class="muted">Προσθήκη, επεξεργασία, απενεργοποίηση και επανενεργοποίηση τμημάτων που χρησιμοποιούνται στις κρατήσεις.</p>
     </div>
 </section>
 
@@ -33,56 +34,48 @@
     <div class="split-management-grid">
         <section>
             <h2>Ενεργά τμήματα</h2>
-            <div class="data-table-wrap">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Τμήμα</th>
-                            <th class="actions-column">Ενέργειες</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var classGroup in Model.ActiveClassGroups)
-                    {
-                        <tr>
-                            <td>@classGroup.Name</td>
-                            <td class="actions-column">
-                                <form method="post" asp-page-handler="Deactivate" asp-route-id="@classGroup.Id" class="inline-action-form"
-                                      onsubmit="return confirm('Να απενεργοποιηθεί το τμήμα @classGroup.Name;');">
-                                    <button type="submit" class="danger-button small">Απενεργοποίηση</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+            <div class="room-list editable-reference-list">
+                @foreach (var classGroup in Model.ActiveClassGroups)
+                {
+                    <article class="simple-card management-card editable-reference-card">
+                        <form method="post" asp-page-handler="Edit" class="reference-edit-form single-field">
+                            <input type="hidden" name="EditClassGroup.Id" value="@classGroup.Id" />
+                            <label>
+                                Τμήμα
+                                <input name="EditClassGroup.Name" value="@classGroup.Name" />
+                            </label>
+                            <button type="submit" class="secondary-button small">Αποθήκευση</button>
+                        </form>
+
+                        <form method="post" asp-page-handler="Deactivate" asp-route-id="@classGroup.Id" class="inline-action-form"
+                              onsubmit="return confirm('Να απενεργοποιηθεί το τμήμα @classGroup.Name;');">
+                            <button type="submit" class="danger-button small">Απενεργοποίηση</button>
+                        </form>
+                    </article>
+                }
             </div>
         </section>
 
         <section>
             <h2>Απενεργοποιημένα τμήματα</h2>
-            <div class="data-table-wrap inactive-table">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Τμήμα</th>
-                            <th class="actions-column">Ενέργειες</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var classGroup in Model.InactiveClassGroups)
-                    {
-                        <tr>
-                            <td>@classGroup.Name</td>
-                            <td class="actions-column">
-                                <form method="post" asp-page-handler="Reactivate" asp-route-id="@classGroup.Id" class="inline-action-form">
-                                    <button type="submit" class="success-button small">Επανενεργοποίηση</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+            <div class="room-list editable-reference-list">
+                @foreach (var classGroup in Model.InactiveClassGroups)
+                {
+                    <article class="simple-card management-card inactive-card editable-reference-card">
+                        <form method="post" asp-page-handler="Edit" class="reference-edit-form single-field">
+                            <input type="hidden" name="EditClassGroup.Id" value="@classGroup.Id" />
+                            <label>
+                                Τμήμα
+                                <input name="EditClassGroup.Name" value="@classGroup.Name" />
+                            </label>
+                            <button type="submit" class="secondary-button small">Αποθήκευση</button>
+                        </form>
+
+                        <form method="post" asp-page-handler="Reactivate" asp-route-id="@classGroup.Id" class="inline-action-form">
+                            <button type="submit" class="success-button small">Επανενεργοποίηση</button>
+                        </form>
+                    </article>
+                }
             </div>
         </section>
     </div>

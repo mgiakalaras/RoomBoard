@@ -393,6 +393,36 @@ public sealed class RoomBoardDbService : IRoomBoardService
         return (true, "Η αίθουσα προστέθηκε.");
     }
 
+
+    public (bool Success, string Message) UpdateRoom(EditRoomInput input)
+    {
+        var room = _db.Rooms.FirstOrDefault(r => r.Id == input.Id);
+        if (room is null)
+        {
+            return (false, "Η αίθουσα δεν βρέθηκε.");
+        }
+
+        var name = input.Name.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return (false, "Συμπληρώστε όνομα αίθουσας.");
+        }
+
+        var duplicate = _db.Rooms.AsEnumerable()
+            .Any(r => r.Id != input.Id && string.Equals(r.Name.Trim(), name, StringComparison.CurrentCultureIgnoreCase));
+
+        if (duplicate)
+        {
+            return (false, "Υπάρχει ήδη αίθουσα με αυτό το όνομα.");
+        }
+
+        room.Name = name;
+        room.Location = string.IsNullOrWhiteSpace(input.Location) ? "Χωρίς τοποθεσία" : input.Location.Trim();
+
+        _db.SaveChanges();
+        return (true, "Η αίθουσα ενημερώθηκε.");
+    }
+
     public (bool Success, string Message) DeactivateRoom(int roomId)
     {
         var room = _db.Rooms.FirstOrDefault(r => r.Id == roomId);
@@ -458,6 +488,36 @@ public sealed class RoomBoardDbService : IRoomBoardService
         return (true, "Ο/Η καθηγητής/τρια προστέθηκε.");
     }
 
+
+    public (bool Success, string Message) UpdateTeacher(EditTeacherInput input)
+    {
+        var teacher = _db.Teachers.FirstOrDefault(t => t.Id == input.Id);
+        if (teacher is null)
+        {
+            return (false, "Ο/Η καθηγητής/τρια δεν βρέθηκε.");
+        }
+
+        var fullName = input.FullName.Trim();
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            return (false, "Συμπληρώστε ονοματεπώνυμο καθηγητή/τριας.");
+        }
+
+        var duplicate = _db.Teachers.AsEnumerable()
+            .Any(t => t.Id != input.Id && string.Equals(t.FullName.Trim(), fullName, StringComparison.CurrentCultureIgnoreCase));
+
+        if (duplicate)
+        {
+            return (false, "Υπάρχει ήδη καθηγητής/τρια με αυτό το ονοματεπώνυμο.");
+        }
+
+        teacher.FullName = fullName;
+        teacher.Specialty = string.IsNullOrWhiteSpace(input.Specialty) ? null : input.Specialty.Trim();
+
+        _db.SaveChanges();
+        return (true, "Ο/Η καθηγητής/τρια ενημερώθηκε.");
+    }
+
     public (bool Success, string Message) DeactivateTeacher(int teacherId)
     {
         var teacher = _db.Teachers.FirstOrDefault(t => t.Id == teacherId);
@@ -521,6 +581,35 @@ public sealed class RoomBoardDbService : IRoomBoardService
 
         _db.SaveChanges();
         return (true, "Το τμήμα προστέθηκε.");
+    }
+
+
+    public (bool Success, string Message) UpdateClassGroup(EditClassGroupInput input)
+    {
+        var classGroup = _db.ClassGroups.FirstOrDefault(c => c.Id == input.Id);
+        if (classGroup is null)
+        {
+            return (false, "Το τμήμα δεν βρέθηκε.");
+        }
+
+        var name = input.Name.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return (false, "Συμπληρώστε όνομα τμήματος.");
+        }
+
+        var duplicate = _db.ClassGroups.AsEnumerable()
+            .Any(c => c.Id != input.Id && string.Equals(c.Name.Trim(), name, StringComparison.CurrentCultureIgnoreCase));
+
+        if (duplicate)
+        {
+            return (false, "Υπάρχει ήδη τμήμα με αυτό το όνομα.");
+        }
+
+        classGroup.Name = name;
+
+        _db.SaveChanges();
+        return (true, "Το τμήμα ενημερώθηκε.");
     }
 
     public (bool Success, string Message) DeactivateClassGroup(int classGroupId)

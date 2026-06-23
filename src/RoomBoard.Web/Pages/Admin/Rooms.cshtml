@@ -1,3 +1,4 @@
+
 @page
 @model RoomBoard.Web.Pages.Admin.RoomsModel
 @{
@@ -8,7 +9,7 @@
     <div>
         <p class="eyebrow">Βασικά δεδομένα</p>
         <h1>Κοινόχρηστες αίθουσες</h1>
-        <p class="muted">Προσθήκη, απενεργοποίηση και επανενεργοποίηση αιθουσών.</p>
+        <p class="muted">Προσθήκη, επεξεργασία, απενεργοποίηση και επανενεργοποίηση αιθουσών.</p>
     </div>
 </section>
 
@@ -36,18 +37,26 @@
     <div class="split-management-grid">
         <section>
             <h2>Ενεργές αίθουσες</h2>
-            <div class="room-list">
+            <div class="room-list editable-reference-list">
                 @foreach (var room in Model.ActiveRooms)
                 {
-                    <article class="simple-card management-card">
-                        <div>
-                            <h2>@room.Name</h2>
-                            <p>@room.Location</p>
-                        </div>
+                    <article class="simple-card management-card editable-reference-card">
+                        <form method="post" asp-page-handler="Edit" class="reference-edit-form">
+                            <input type="hidden" name="EditRoom.Id" value="@room.Id" />
+                            <label>
+                                Όνομα
+                                <input name="EditRoom.Name" value="@room.Name" />
+                            </label>
+                            <label>
+                                Τοποθεσία
+                                <input name="EditRoom.Location" value="@room.Location" />
+                            </label>
+                            <button type="submit" class="secondary-button small">Αποθήκευση</button>
+                        </form>
 
                         <form method="post" asp-page-handler="Deactivate" asp-route-id="@room.Id" class="inline-action-form"
                               onsubmit="return confirm('Να απενεργοποιηθεί η αίθουσα @room.Name;');">
-                            <button type="submit" class="danger-button">Απενεργοποίηση</button>
+                            <button type="submit" class="danger-button small">Απενεργοποίηση</button>
                         </form>
                     </article>
                 }
@@ -56,17 +65,25 @@
 
         <section>
             <h2>Απενεργοποιημένες αίθουσες</h2>
-            <div class="room-list">
+            <div class="room-list editable-reference-list">
                 @foreach (var room in Model.InactiveRooms)
                 {
-                    <article class="simple-card management-card inactive-card">
-                        <div>
-                            <h2>@room.Name</h2>
-                            <p>@room.Location</p>
-                        </div>
+                    <article class="simple-card management-card inactive-card editable-reference-card">
+                        <form method="post" asp-page-handler="Edit" class="reference-edit-form">
+                            <input type="hidden" name="EditRoom.Id" value="@room.Id" />
+                            <label>
+                                Όνομα
+                                <input name="EditRoom.Name" value="@room.Name" />
+                            </label>
+                            <label>
+                                Τοποθεσία
+                                <input name="EditRoom.Location" value="@room.Location" />
+                            </label>
+                            <button type="submit" class="secondary-button small">Αποθήκευση</button>
+                        </form>
 
                         <form method="post" asp-page-handler="Reactivate" asp-route-id="@room.Id" class="inline-action-form">
-                            <button type="submit" class="success-button">Επανενεργοποίηση</button>
+                            <button type="submit" class="success-button small">Επανενεργοποίηση</button>
                         </form>
                     </article>
                 }

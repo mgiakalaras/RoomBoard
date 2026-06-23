@@ -17,6 +17,9 @@ public sealed class ClassGroupsModel : PageModel
     [BindProperty]
     public AddClassGroupInput NewClassGroup { get; set; } = new();
 
+    [BindProperty]
+    public EditClassGroupInput EditClassGroup { get; set; } = new();
+
     public IReadOnlyList<ClassGroup> ActiveClassGroups { get; private set; } = Array.Empty<ClassGroup>();
     public IReadOnlyList<ClassGroup> InactiveClassGroups { get; private set; } = Array.Empty<ClassGroup>();
     public string? ResultMessage { get; private set; }
@@ -45,6 +48,25 @@ public sealed class ClassGroupsModel : PageModel
         {
             return RedirectToPage("/Admin/ClassGroups");
         }
+
+        LoadClassGroups();
+        return Page();
+    }
+
+
+    public IActionResult OnPostEdit()
+    {
+        if (!ModelState.IsValid)
+        {
+            LoadClassGroups();
+            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultSuccess = false;
+            return Page();
+        }
+
+        var result = _roomBoard.UpdateClassGroup(EditClassGroup);
+        ResultMessage = result.Message;
+        ResultSuccess = result.Success;
 
         LoadClassGroups();
         return Page();

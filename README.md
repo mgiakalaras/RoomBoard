@@ -428,3 +428,12 @@ Print filtering update:
 - Weekly print also shows only rooms that have bookings/changes for each printed day.
 - Empty days/rooms are no longer printed as large blank boards.
 - No database or seed changes are included.
+
+## v1.0.16 notes
+
+Print and reference-data update:
+- Daily and weekly print pages allow selecting extra rooms to include, in addition to rooms with bookings.
+- Rooms with bookings are still printed automatically.
+- Added editing support for rooms, teachers and class groups.
+- Editing reference data updates existing records and existing bookings display the corrected names.
+- No SQLite schema changes are included.

@@ -26,12 +26,15 @@ public interface IRoomBoardService
     (bool Success, string Message) CancelBooking(int bookingId, string? reason);
 
     (bool Success, string Message) AddRoom(AddRoomInput input);
+    (bool Success, string Message) UpdateRoom(EditRoomInput input);
     (bool Success, string Message) DeactivateRoom(int roomId);
     (bool Success, string Message) ReactivateRoom(int roomId);
     (bool Success, string Message) AddTeacher(AddTeacherInput input);
+    (bool Success, string Message) UpdateTeacher(EditTeacherInput input);
     (bool Success, string Message) DeactivateTeacher(int teacherId);
     (bool Success, string Message) ReactivateTeacher(int teacherId);
     (bool Success, string Message) AddClassGroup(AddClassGroupInput input);
+    (bool Success, string Message) UpdateClassGroup(EditClassGroupInput input);
     (bool Success, string Message) DeactivateClassGroup(int classGroupId);
     (bool Success, string Message) ReactivateClassGroup(int classGroupId);
     (bool Success, string Message) AddLessonPeriod(AddLessonPeriodInput input);

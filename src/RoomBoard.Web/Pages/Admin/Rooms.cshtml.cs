@@ -17,6 +17,9 @@ public sealed class RoomsModel : PageModel
     [BindProperty]
     public AddRoomInput NewRoom { get; set; } = new();
 
+    [BindProperty]
+    public EditRoomInput EditRoom { get; set; } = new();
+
     public IReadOnlyList<Room> ActiveRooms { get; private set; } = Array.Empty<Room>();
     public IReadOnlyList<Room> InactiveRooms { get; private set; } = Array.Empty<Room>();
     public string? ResultMessage { get; private set; }
@@ -45,6 +48,25 @@ public sealed class RoomsModel : PageModel
         {
             return RedirectToPage("/Admin/Rooms");
         }
+
+        LoadRooms();
+        return Page();
+    }
+
+
+    public IActionResult OnPostEdit()
+    {
+        if (!ModelState.IsValid)
+        {
+            LoadRooms();
+            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultSuccess = false;
+            return Page();
+        }
+
+        var result = _roomBoard.UpdateRoom(EditRoom);
+        ResultMessage = result.Message;
+        ResultSuccess = result.Success;
 
         LoadRooms();
         return Page();
