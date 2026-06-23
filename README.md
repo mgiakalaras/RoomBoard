@@ -472,3 +472,11 @@ Kiosk visual motion update:
 - Added slow Ken-Burns style movement to the user-selected spotlight image.
 - Admin, print and management pages are not affected.
 - No database or seed changes are included.
+
+## v1.0.22 notes
+
+Reference forms validation fix:
+- Fixed adding a new room when edit fields are empty.
+- Fixed the same mixed-form validation issue for teachers and class groups.
+- Add and edit forms now validate only their own posted fields.
+- No database or seed changes are included.

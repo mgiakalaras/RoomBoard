@@ -32,10 +32,12 @@ public sealed class TeachersModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (string.IsNullOrWhiteSpace(NewTeacher.FullName))
         {
             LoadTeachers();
-            ResultMessage = "Ελέγξτε τα πεδία της φόρμας.";
+            ResultMessage = "Συμπληρώστε ονοματεπώνυμο καθηγητή/τριας.";
             ResultSuccess = false;
             return Page();
         }
@@ -46,20 +48,21 @@ public sealed class TeachersModel : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Admin/Teachers");
+            NewTeacher = new();
         }
 
         LoadTeachers();
         return Page();
     }
 
-
     public IActionResult OnPostEdit()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (EditTeacher.Id <= 0 || string.IsNullOrWhiteSpace(EditTeacher.FullName))
         {
             LoadTeachers();
-            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultMessage = "Συμπληρώστε ονοματεπώνυμο καθηγητή/τριας.";
             ResultSuccess = false;
             return Page();
         }

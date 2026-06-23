@@ -32,10 +32,12 @@ public sealed class RoomsModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (string.IsNullOrWhiteSpace(NewRoom.Name))
         {
             LoadRooms();
-            ResultMessage = "Ελέγξτε τα πεδία της φόρμας.";
+            ResultMessage = "Συμπληρώστε όνομα αίθουσας.";
             ResultSuccess = false;
             return Page();
         }
@@ -46,20 +48,21 @@ public sealed class RoomsModel : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Admin/Rooms");
+            NewRoom = new();
         }
 
         LoadRooms();
         return Page();
     }
 
-
     public IActionResult OnPostEdit()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (EditRoom.Id <= 0 || string.IsNullOrWhiteSpace(EditRoom.Name))
         {
             LoadRooms();
-            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultMessage = "Συμπληρώστε όνομα αίθουσας.";
             ResultSuccess = false;
             return Page();
         }

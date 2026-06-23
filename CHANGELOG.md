@@ -623,3 +623,14 @@
 ### Notes
 - This patch only changes kiosk CSS.
 - It does not modify the SQLite schema or existing data.
+
+## v1.0.22 - Fix reference form validation
+
+### Fixed
+- Fixed room creation failing with “Συμπληρώστε όνομα αίθουσας” because the edit form validation was also being checked.
+- Fixed equivalent mixed-form validation risk for teachers and class groups.
+- Add and edit handlers now validate only the relevant input model.
+
+### Notes
+- This patch only changes Razor PageModel validation logic.
+- It does not modify the SQLite schema or existing data.

@@ -32,10 +32,12 @@ public sealed class ClassGroupsModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (string.IsNullOrWhiteSpace(NewClassGroup.Name))
         {
             LoadClassGroups();
-            ResultMessage = "Ελέγξτε τα πεδία της φόρμας.";
+            ResultMessage = "Συμπληρώστε όνομα τμήματος.";
             ResultSuccess = false;
             return Page();
         }
@@ -46,20 +48,21 @@ public sealed class ClassGroupsModel : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Admin/ClassGroups");
+            NewClassGroup = new();
         }
 
         LoadClassGroups();
         return Page();
     }
 
-
     public IActionResult OnPostEdit()
     {
-        if (!ModelState.IsValid)
+        ModelState.Clear();
+
+        if (EditClassGroup.Id <= 0 || string.IsNullOrWhiteSpace(EditClassGroup.Name))
         {
             LoadClassGroups();
-            ResultMessage = "Ελέγξτε τα πεδία επεξεργασίας.";
+            ResultMessage = "Συμπληρώστε όνομα τμήματος.";
             ResultSuccess = false;
             return Page();
         }
